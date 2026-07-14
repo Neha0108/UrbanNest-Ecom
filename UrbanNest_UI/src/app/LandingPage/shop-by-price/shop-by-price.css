@@ -1,0 +1,33 @@
+.price-section {
+  padding: 40px;
+  text-align: center;
+}
+
+.price-section h2 {
+  font-size: 28px;
+  margin-bottom: 25px;
+}
+
+.price-grid {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.price-card {
+  padding: 20px 30px;
+  border-radius: 12px;
+  background: #111;
+  color: #fff;
+  cursor: pointer;
+  transition: 0.3s;
+  border: 1px solid #333;
+}
+
+.price-card:hover {
+  transform: translateY(-5px);
+  background: #000;
+  border-color: gold;
+  color: gold;
+}

@@ -1,0 +1,57 @@
+<section class="shop-category-section">
+
+  <div class="heading-area">
+
+    <p class="sub-title">
+      Urban Nest Collection
+    </p>
+
+    <h1>
+      Shop By Category
+    </h1>
+
+    <p class="description">
+      Explore handpicked categories designed to elevate modern living — from fashion and beauty to home décor and lifestyle essentials.
+    </p>
+
+  </div>
+
+  <div class="categories-container">
+
+    <div
+      #categoryCard
+      class="category-card"
+      *ngFor="let category of categories; let i = index"
+      [class.active]="activeIndex === i"
+      (mouseenter)="setActive(i)"
+      (click)="goToProducts(category)"
+    >
+
+      <img
+        [alt]="category.categoryName"
+        [src]="category.imageUrl"
+      >
+
+      <div class="overlay"></div>
+
+      <div class="content">
+
+        <span>
+          Premium Collection
+        </span>
+
+        <h2>
+          {{ category.categoryName }}
+        </h2>
+
+        <button>
+          Shop Now →
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>

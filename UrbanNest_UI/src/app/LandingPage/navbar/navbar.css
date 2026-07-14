@@ -1,0 +1,43 @@
+﻿/* NAVBAR SPECIFIC OVERRIDES - most styling now in global styles.css */
+
+.brand-logo {
+  text-decoration: none;
+}
+
+.main-content {
+  position: relative;
+  z-index: 1;
+  margin-top: 64px; /* Adjust based on navbar height */
+  background: linear-gradient(
+    180deg,
+    #0b0d12 0%,
+    #11151c 100%
+  );
+}
+
+.signin-btn {
+  color: white;
+  text-decoration: none;
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, .15);
+  transition: .3s;
+}
+
+.signin-btn:hover {
+  border-color: #D4AF37;
+}
+
+.register-btn {
+  background: #D4AF37;
+  color: black;
+  text-decoration: none;
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-weight: 600;
+  transition: .3s;
+}
+
+.register-btn:hover {
+  transform: translateY(-2px);
+}

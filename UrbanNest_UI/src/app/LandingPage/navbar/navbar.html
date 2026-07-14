@@ -1,0 +1,136 @@
+﻿<!-- =========================
+     PRIMARY NAVBAR
+========================= -->
+<div>
+<nav class="top-bar" aria-label="Main navigation">
+
+  <a class="brand-logo" routerLink="/">Urban Nest</a>
+
+  <div class="top-bar-tabs">
+    <a class="top-bar-item"
+       [class.active]="activePanel === 'home'"
+       routerLink="/home"
+       (click)="setHome()">
+      Home
+    </a>
+
+    <button class="top-bar-item"
+            type="button"
+            [class.active]="activePanel === 'collection'"
+            [attr.aria-expanded]="isCollectionOpen"
+            (mouseenter)="showTabPreview('collection')"
+            (mouseleave)="scheduleHidePreview()">
+      Collection
+    </button>
+
+    <a class="top-bar-item"
+       [class.active]="activePanel === 'category'"
+       routerLink="/products"
+       (mouseenter)="showTabPreview('category')"
+       (mouseleave)="scheduleHidePreview()">
+      Category
+    </a>
+
+    <a class="top-bar-item" routerLink="/about">About</a>
+  </div>
+
+  <div class="top-bar-actions">
+    <a class="signin-btn" routerLink="/login">Sign In</a>
+    <a class="register-btn" routerLink="/register">Register</a>
+  </div>
+
+  <!-- =========================
+       COLLECTION / CATEGORY PREVIEW PANEL
+  ========================== -->
+  <div class="collection-panel"
+       #collectionPanel
+       (mouseenter)="cancelHidePreview()"
+       (mouseleave)="scheduleHidePreview()">
+
+    <div class="collection-panel-inner">
+
+      <div class="collection-panel-header">
+        <div>
+          <span class="section-label">
+            {{ activePanel === 'collection' ? 'Featured Collection' : 'Browse Categories' }}
+          </span>
+          <h2>
+            {{ activePanel === 'collection' ? 'Urban Nest Curated Picks' : 'Explore Top Categories' }}
+          </h2>
+        </div>
+
+        <div class="collection-panel-meta">
+          <ng-container [ngSwitch]="true">
+            <span *ngSwitchCase="isLoadingCollection">Loading preview...</span>
+
+            <button *ngSwitchCase="!isLoadingCollection && activePanel === 'collection'"
+                    class="view-all-btn"
+                    (click)="viewAllProducts()">
+              View All →
+            </button>
+
+            <span *ngSwitchCase="!isLoadingCollection && activePanel === 'category'">
+              {{ categories.length }} categories available
+            </span>
+          </ng-container>
+        </div>
+      </div>
+
+      <div *ngIf="isLoadingCollection" class="product-loading">
+        Gathering premium pieces for you...
+      </div>
+
+      <!-- PRODUCT SLIDER -->
+      <div *ngIf="!isLoadingCollection && activePanel === 'collection' && visibleProducts.length"
+           class="slider-container">
+
+        <button class="slider-arrow prev" type="button" (click)="slidePrev()">‹</button>
+        <button class="slider-arrow next" type="button" (click)="slideNext()">›</button>
+
+        <div class="slider-track">
+          <article *ngFor="let product of visibleProducts" class="product-card slide">
+
+            <div class="product-image" *ngIf="product.imagepath?.length">
+              <img [src]="'http://localhost:5146' + product.imagepath?.[0]" alt="product" />
+            </div>
+
+            <div class="product-card-content">
+              <span class="product-card-badge">{{ product.categoryName }}</span>
+              <h3>{{ product.productName }}</h3>
+              <p class="product-description">{{ product.productDescription }}</p>
+            </div>
+
+            <div class="product-price">
+              {{ product.productPrice | currency:'INR' }}
+            </div>
+
+          </article>
+        </div>
+      </div>
+
+      <!-- CATEGORY GRID -->
+      <div *ngIf="!isLoadingCollection && activePanel === 'category' && categories.length"
+           class="category-grid">
+        <article *ngFor="let category of categories" class="category-card">
+          <div class="category-card-content">
+            <h3>{{ category.categoryName }}</h3>
+          </div>
+        </article>
+      </div>
+
+    </div>
+
+    <button *ngIf="activePanel === 'collection' && !showMore && products.length > visibleProducts.length"
+            class="explore-more"
+            type="button"
+            (click)="showMoreProducts()">
+      Explore More
+    </button>
+
+  </div>
+</nav>
+
+<main  class="main-content">
+  <router-outlet></router-outlet>
+</main>
+</div>
