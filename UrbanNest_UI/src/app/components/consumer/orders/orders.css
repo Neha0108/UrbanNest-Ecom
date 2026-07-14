@@ -1,0 +1,751 @@
+/* ==========================================================================
+   Orders — Urban Nest Design System
+   ========================================================================== */
+
+:host {
+  display: block;
+
+  --bg-primary: #0f1115;
+  --bg-secondary: #171a20;
+  --bg-card: #1d2128;
+  --accent: #c9a55c;
+  --accent-rgb: 201, 165, 92;
+  --text-primary: #ffffff;
+  --text-secondary: #b9bdc6;
+  --text-secondary-rgb: 185, 189, 198;
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --success: #4caf50;
+  --success-rgb: 76, 175, 80;
+  --danger: #ff5a5f;
+  --danger-rgb: 255, 90, 95;
+  --radius: 14px;
+}
+
+.orders-page {
+  min-height: 100vh;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Inter', 'SF Pro Display', 'Manrope', sans-serif;
+  padding: 88px 24px 80px;
+}
+
+.orders-shell {
+  max-width: 780px;
+  margin: 0 auto;
+}
+
+/* ---------------------------------------------------------------------
+   HEADER
+   --------------------------------------------------------------------- */
+
+.orders-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+
+.eyebrow {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 8px;
+}
+
+.orders-header h1 {
+  font-size: 30px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.order-count {
+  font-size: 13px;
+  color: var(--text-secondary);
+  padding-bottom: 4px;
+}
+
+/* ---------------------------------------------------------------------
+   FILTER PILLS
+   --------------------------------------------------------------------- */
+
+.filter-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+
+.filter-pill {
+  appearance: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 999px;
+  padding: 9px 18px;
+  transition: color 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.filter-pill:hover {
+  color: var(--text-primary);
+  border-color: rgba(var(--accent-rgb), 0.35);
+}
+
+.filter-pill.is-active {
+  color: #14161a;
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+/* ---------------------------------------------------------------------
+   ORDER LIST / CARDS
+   --------------------------------------------------------------------- */
+
+.order-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.order-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius);
+  padding: 24px 26px;
+  transition: border-color 200ms ease, transform 200ms ease;
+}
+
+.order-card:hover {
+  border-color: rgba(var(--accent-rgb), 0.25);
+}
+
+.order-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.order-number {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 4px;
+}
+
+.order-date {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.status-badge {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  border-radius: 999px;
+  white-space: nowrap;
+  border: 1px solid transparent;
+}
+
+.status-badge.status-pending,
+.status-badge.status-confirmed {
+  color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.12);
+  border-color: rgba(var(--accent-rgb), 0.25);
+}
+
+.status-badge.status-shipped,
+.status-badge.status-out-for-delivery {
+  color: #7dc4ff;
+  background: rgba(125, 196, 255, 0.12);
+  border-color: rgba(125, 196, 255, 0.25);
+}
+
+.status-badge.status-delivered {
+  color: var(--success);
+  background: rgba(var(--success-rgb), 0.12);
+  border-color: rgba(var(--success-rgb), 0.25);
+}
+
+.status-badge.status-cancelled {
+  color: var(--danger);
+  background: rgba(var(--danger-rgb), 0.12);
+  border-color: rgba(var(--danger-rgb), 0.25);
+}
+
+.item-list {
+  list-style: none;
+  margin: 0 0 18px;
+  padding: 14px 0;
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.item-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13.5px;
+}
+
+.item-name {
+  color: var(--text-primary);
+}
+
+.item-meta {
+  color: var(--text-secondary);
+  white-space: nowrap;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.item-price {
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.order-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.order-total-block {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.item-count {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.order-total {
+  font-size: 17px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.order-actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* ---------------------------------------------------------------------
+   BUTTONS
+   --------------------------------------------------------------------- */
+
+.btn {
+  appearance: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1),
+    background 180ms ease, border-color 180ms ease, color 180ms ease,
+    opacity 180ms ease;
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #14161a;
+  font-size: 14px;
+  padding: 13px 28px;
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(var(--accent-rgb), 0.28);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-subtle);
+  font-size: 14px;
+  padding: 13px 24px;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  border-color: rgba(var(--accent-rgb), 0.5);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--danger);
+  border: 1px solid transparent;
+  font-size: 13px;
+  padding: 8px 14px;
+}
+
+.btn-ghost:hover:not(:disabled) {
+  background: rgba(var(--danger-rgb), 0.1);
+}
+
+.btn-sm {
+  font-size: 12.5px;
+  padding: 9px 16px;
+}
+
+/* ---------------------------------------------------------------------
+   STATE PANELS (empty / error)
+   --------------------------------------------------------------------- */
+
+.state-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius);
+  padding: 56px 32px;
+  text-align: center;
+}
+
+.state-panel h2 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 8px;
+}
+
+.state-panel p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin: 0 0 20px;
+}
+
+.state-icon {
+  width: 40px;
+  height: 40px;
+  margin: 0 auto 18px;
+  stroke: var(--text-secondary);
+  stroke-width: 1.6;
+  fill: none;
+}
+
+/* ---------------------------------------------------------------------
+   SKELETON LOADING
+   --------------------------------------------------------------------- */
+
+.order-card.skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.skeleton-line {
+  height: 12px;
+  border-radius: 6px;
+  background: linear-gradient(
+    90deg,
+    var(--bg-secondary) 25%,
+    #23262e 37%,
+    var(--bg-secondary) 63%
+  );
+  background-size: 400% 100%;
+  animation: skeleton-shimmer 1.4s ease infinite;
+}
+
+.skeleton-line.w-30 { width: 30%; }
+.skeleton-line.w-40 { width: 40%; }
+.skeleton-line.w-60 { width: 60%; }
+
+@keyframes skeleton-shimmer {
+  0% { background-position: 100% 50%; }
+  100% { background-position: 0 50%; }
+}
+
+/* ---------------------------------------------------------------------
+   TRACK ORDER SLIDE-OVER
+   --------------------------------------------------------------------- */
+
+.track-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(2px);
+  z-index: 40;
+}
+
+.track-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  max-width: 420px;
+  background: var(--bg-card);
+  border-left: 1px solid var(--border-subtle);
+  z-index: 41;
+  padding: 32px 28px;
+  overflow-y: auto;
+  box-shadow: -30px 0 80px rgba(0, 0, 0, 0.4);
+}
+
+.track-panel-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 32px;
+}
+
+.track-panel-header h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.icon-btn {
+  appearance: none;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background 180ms ease;
+}
+
+.icon-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.icon-btn svg {
+  width: 18px;
+  height: 18px;
+  stroke: var(--text-secondary);
+  stroke-width: 2;
+  fill: none;
+}
+
+.icon-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Timeline (shared visual language with order-success page) */
+
+.timeline {
+  list-style: none;
+  margin: 0 0 36px;
+  padding: 0;
+}
+
+.timeline-step {
+  display: flex;
+  gap: 14px;
+}
+
+.step-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.step-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--bg-secondary);
+  border: 2px solid var(--border-subtle);
+  flex-shrink: 0;
+  transition: background 200ms ease, border-color 200ms ease;
+}
+
+.step-line {
+  width: 1px;
+  flex: 1;
+  min-height: 30px;
+  background: var(--border-subtle);
+  margin-top: 4px;
+}
+
+.step-label {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  padding-bottom: 22px;
+}
+
+.timeline-step.is-done .step-dot {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.timeline-step.is-done .step-label {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.timeline-step.is-done .step-line {
+  background: rgba(var(--accent-rgb), 0.4);
+}
+
+.cancelled-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+  padding: 28px 0 36px;
+}
+
+.cancelled-panel svg {
+  width: 34px;
+  height: 34px;
+  stroke: var(--danger);
+  stroke-width: 1.6;
+  fill: none;
+}
+
+.cancelled-panel p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.track-items {
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 20px;
+}
+
+.track-items-heading {
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin: 0 0 14px;
+}
+
+.track-items ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.track-items li {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13.5px;
+}
+
+.track-items li span:first-child {
+  color: var(--text-primary);
+}
+
+.track-items li span:last-child {
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ===============================
+   DELIVERY INFO — ORDER CARD STRIP
+================================ */
+.delivery-info-strip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 0 10px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: rgba(212, 175, 55, 0.08);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  font-size: 0.85rem;
+  flex-wrap: wrap;
+}
+
+.delivery-icon {
+  font-size: 1rem;
+}
+
+.delivery-text {
+  color: #e5c158;
+  font-weight: 500;
+  flex: 1;
+}
+
+.delivery-call {
+  color: #d4af37;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.delivery-call:hover {
+  text-decoration: underline;
+}
+
+/* ===============================
+   DELIVERY INFO — TRACK PANEL CARD
+================================ */
+.track-delivery-card {
+  margin-top: 24px;
+  padding: 16px;
+  border-radius: 14px;
+  background: rgba(212, 175, 55, 0.06);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+.track-delivery-heading {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #d4af37;
+  margin: 0 0 12px;
+}
+
+.track-delivery-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.track-delivery-avatar {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #d4af37, #b8860b);
+  color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.track-delivery-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.track-delivery-name {
+  margin: 0;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.track-delivery-phone {
+  font-size: 0.85rem;
+  color: #999;
+  text-decoration: none;
+}
+
+.track-delivery-phone:hover {
+  color: #d4af37;
+}
+
+.track-call-btn {
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #d4af37;
+  color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-size: 1rem;
+  transition: 0.25s ease;
+}
+
+.track-call-btn:hover {
+  background: #e5c158;
+  transform: scale(1.05);
+}
+
+/* ---------------------------------------------------------------------
+   RESPONSIVE
+   --------------------------------------------------------------------- */
+
+@media (max-width: 640px) {
+  .orders-page {
+    padding: 64px 16px 56px;
+  }
+
+  .orders-header h1 {
+    font-size: 24px;
+  }
+
+  .order-card {
+    padding: 20px 18px;
+  }
+
+  .order-card-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .order-actions {
+    width: 100%;
+  }
+
+  .order-actions .btn {
+    flex: 1;
+  }
+
+  .track-panel {
+    max-width: 100%;
+    padding: 24px 20px;
+  }
+}
+
+/* ---------------------------------------------------------------------
+   REDUCED MOTION
+   --------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .order-card,
+  .btn,
+  .filter-pill,
+  .step-dot,
+  .step-line {
+    transition: none;
+  }
+
+  .skeleton-line {
+    animation: none;
+  }
+}

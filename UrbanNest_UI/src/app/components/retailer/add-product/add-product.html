@@ -1,0 +1,137 @@
+<div class="form-container">
+  <div class="form-card">
+
+    <h3 class="form-title">
+      {{ isEdit ? '✏️ Edit Product' : '➕ Add New Product' }}
+    </h3>
+
+    <!--  ERROR/SUCCESS MESSAGES -->
+    <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
+      {{ errorMessage }}
+    </div>
+    <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+      {{ successMessage }}
+    </div>
+
+    <form [formGroup]="productForm" (ngSubmit)="submit()">
+
+      <!-- Product Name -->
+      <div class="form-group">
+        <label>Product Name <span class="text-danger">*</span></label>
+        <input type="text" class="form-control"
+          [class.is-invalid]="productForm.get('productName')?.touched && productForm.get('productName')?.invalid"
+          placeholder="Enter product name" formControlName="productName" />
+        <small class="text-danger"
+          *ngIf="productForm.get('productName')?.touched && productForm.get('productName')?.invalid">
+          <span *ngIf="productForm.get('productName')?.errors?.['required']">Product name is required</span>
+        </small>
+      </div>
+
+      <!-- Description -->
+      <div class="form-group">
+        <label>Description <span class="text-danger">*</span></label>
+        <textarea formControlName="productDescription" class="form-control"
+          [class.is-invalid]="productForm.get('productDescription')?.touched && productForm.get('productDescription')?.invalid"
+          rows="3" placeholder="Enter product description (max 150 characters)"></textarea>
+
+        <!-- Error Messages -->
+        <small class="text-danger"
+          *ngIf="productForm.get('productDescription')?.touched && productForm.get('productDescription')?.invalid">
+          <span *ngIf="productForm.get('productDescription')?.errors?.['required']">Description is required</span>
+          <span *ngIf="productForm.get('productDescription')?.errors?.['maxlength']">Description cannot exceed 150
+            characters</span>
+        </small>
+      </div>
+<!-- Category -->
+      <label>Category <span class="text-danger">*</span></label>
+      <select class="form-control" formControlName="CategoryName" (change)="onCategoryChange()">
+
+        <option value="">Select Category</option>
+
+        <option *ngFor="let c of categories" [value]="c.categoryName">
+          {{ c.categoryName }}
+        </option>
+
+      </select>
+      <!-- Subcategory -->
+      <div class="form-group">
+        <label>Subcategory <span class="text-danger">*</span></label>
+        <select class="form-control"
+          [class.is-invalid]="productForm.get('SubCategoryName')?.touched && productForm.get('SubCategoryName')?.invalid"
+          formControlName="SubCategoryName">
+          <option value="">Select Subcategory</option>
+          <option *ngFor="let sc of subcategories" [value]="sc.subCategoryName">
+            {{ sc.subCategoryName }}
+          </option>
+        </select>
+        <small class="text-danger"
+          *ngIf="productForm.get('SubCategoryName')?.touched && productForm.get('SubCategoryName')?.invalid">
+          <span *ngIf="productForm.get('SubCategoryName')?.errors?.['required']">Please select a subcategory</span>
+        </small>
+
+        <!-- Price -->
+        <div class="form-group">
+          <label>Price (₹) <span class="text-danger">*</span></label>
+          <input type="number" class="form-control"
+            [class.is-invalid]="productForm.get('productPrice')?.touched && productForm.get('productPrice')?.invalid"
+            placeholder="Enter price" formControlName="productPrice" />
+          <small class="text-danger"
+            *ngIf="productForm.get('productPrice')?.touched && productForm.get('productPrice')?.invalid">
+            <span *ngIf="productForm.get('productPrice')?.errors?.['required']">Price is required</span>
+          </small>
+        </div>
+
+        <!-- Stock -->
+        <div class="form-group">
+          <label>Stock <span class="text-danger">*</span></label>
+          <input type="number" class="form-control"
+            [class.is-invalid]="productForm.get('stock')?.touched && productForm.get('stock')?.invalid"
+            placeholder="Enter stock quantity" formControlName="stock" />
+          <small class="text-danger" *ngIf="productForm.get('stock')?.touched && productForm.get('stock')?.invalid">
+            <span *ngIf="productForm.get('stock')?.errors?.['required']">Stock quantity is required</span>
+          </small>
+        </div>
+
+        <!--  Current Images (Edit Mode) -->
+        <div *ngIf="isEdit && currentImages.length > 0" class="mb-2">
+          <label>Current Images</label><br />
+          <img *ngFor="let img of currentImages" [src]="'http://localhost:5146' + img" width="100"
+            style="margin-right:8px; border-radius: 8px" />
+        </div>
+
+        <!--  Image Upload -->
+        <div class="form-group">
+          <label>Product Images</label>
+
+          <div class="drop-zone" (dragover)="$event.preventDefault()" (drop)="onDrop($event)">
+            <p>Drag & Drop images here or click to upload</p>
+            <input type="file" multiple (change)="onImageSelect($event)" />
+          </div>
+        </div>
+
+        <!--  Preview Selected Images -->
+        <div class="preview-container mt-2" *ngIf="previewUrls.length > 0">
+          <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+            <div *ngFor="let img of previewUrls; let i = index" style="position: relative; display: inline-block;">
+              <img [src]="img" width="80" style="margin-right:8px; border-radius:8px; border: 1px solid #ccc;" />
+              <button type="button" (click)="removeSelectedImage(i)"
+                style="position: absolute; top: 0; right: 0; background: #fff; border: none; border-radius: 50%; width: 22px; height: 22px; cursor: pointer; color: #d00; font-weight: bold;">×</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="d-flex gap-2 mt-3">
+          <button type="submit" class="submit-btn" [disabled]="productForm.invalid">
+            {{ isEdit ? 'Update Product' : 'Add Product' }}
+          </button>
+
+          <button type="button" class="btn btn-secondary" (click)="cancel()">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </form>
+
+  </div>
+</div>

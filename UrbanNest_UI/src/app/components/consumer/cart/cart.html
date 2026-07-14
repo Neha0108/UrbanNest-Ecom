@@ -1,0 +1,166 @@
+<main class="cart-page">
+
+  <header class="cart-header">
+    <nav class="breadcrumb">
+      <a routerLink="/">Home</a>
+      <span>/</span>
+      <span>Shopping Cart</span>
+    </nav>
+    <h1>Your Cart</h1>
+  </header>
+
+  <!-- Loading -->
+  <div class="cart-loading" *ngIf="loading">
+    <div class="skeleton-cart-item" *ngFor="let s of [1,2,3]">
+      <div class="skeleton-img"></div>
+      <div class="skeleton-text">
+        <div class="skeleton-line short"></div>
+        <div class="skeleton-line"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div class="cart-empty" *ngIf="!loading && cartItems.length === 0">
+    <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+      <path d="M3 3h2l2.4 12.2a2 2 0 002 1.8h8.6a2 2 0 002-1.6L21 8H6M9 21a1 1 0 100-2 1 1 0 000 2zM19 21a1 1 0 100-2 1 1 0 000 2z"/>
+    </svg>
+    <h3>Your cart is empty</h3>
+    <p>Looks like you haven't added anything yet. Explore our collections to get started.</p>
+    <a routerLink="/products" class="btn-primary">Start Shopping</a>
+  </div>
+
+  <!-- Cart Content -->
+  <div class="cart-layout" *ngIf="!loading && cartItems.length > 0">
+
+    <!-- ================= CART ITEMS ================= -->
+    <section class="cart-items">
+      <div class="cart-item" *ngFor="let item of cartItems; trackBy: trackByProductId" [class.updating]="updatingId === item.ProductId || removingId === item.ProductId">
+
+        <div class="cart-item-image">
+          <img [src]="'http://localhost:5146' + (item.ImagePath?.[0] || '')" [alt]="item.ProductName">
+        </div>
+
+        <div class="cart-item-info">
+          <h4>{{ item.ProductName }}</h4>
+          <p class="cart-item-price">₹{{ item.ProductPrice | number }}</p>
+        </div>
+
+        <div class="cart-item-qty">
+          <div class="qty-control">
+            <button (click)="decreaseQty(item)" [disabled]="item.Quantity <= 1 || updatingId === item.ProductId" aria-label="Decrease quantity">−</button>
+            <span>{{ item.Quantity }}</span>
+            <button (click)="increaseQty(item)" [disabled]="updatingId === item.ProductId" aria-label="Increase quantity">+</button>
+          </div>
+        </div>
+
+        <div class="cart-item-total">
+          ₹{{ (item.ProductPrice * item.Quantity) | number }}
+        </div>
+
+        <button
+          class="cart-item-remove"
+          (click)="removeItem(item)"
+          [disabled]="removingId === item.ProductId"
+          aria-label="Remove item">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0l-1 14a2 2 0 01-2 2H7a2 2 0 01-2-2L4 6h16z"/>
+          </svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- ================= SUMMARY ================= -->
+    <aside class="cart-summary">
+      <h3>Order Summary</h3>
+
+      <div class="summary-row">
+        <span>Subtotal</span>
+        <span>₹{{ subtotal | number }}</span>
+      </div>
+
+      <div class="summary-row">
+        <span>Shipping</span>
+        <span *ngIf="shipping > 0">₹{{ shipping }}</span>
+        <span *ngIf="shipping === 0" class="free-label">Free</span>
+      </div>
+
+      <div class="summary-row">
+        <span>Estimated Tax</span>
+        <span>₹{{ tax | number }}</span>
+      </div>
+
+      <p class="free-shipping-hint" *ngIf="amountToFreeShipping > 0">
+        Add ₹{{ amountToFreeShipping | number }} more for free shipping
+      </p>
+
+      <!-- Coupon — UI only, backend not available yet -->
+      <!-- Coupon input -->
+<div class="coupon-box" *ngIf="!appliedCoupon">
+  <input
+    type="text"
+    placeholder="Coupon code"
+    [(ngModel)]="couponCode"
+    (keyup.enter)="applyCoupon()"
+    [disabled]="applyingCoupon">
+  <button (click)="applyCoupon()" [disabled]="applyingCoupon || !couponCode.trim()">
+    {{ applyingCoupon ? 'Applying...' : 'Apply' }}
+  </button>
+</div>
+<p class="coupon-error" *ngIf="couponError">{{ couponError }}</p>
+
+<!-- Applied coupon chip -->
+<div class="coupon-applied" *ngIf="appliedCoupon">
+  <span>Coupon {{ appliedCoupon.couponCode }} applied</span>
+  <button class="coupon-remove" (click)="removeCoupon()">Remove</button>
+</div>
+
+<!-- All active coupons, loaded at order summary -->
+<div class="available-coupons" *ngIf="!loadingCoupons && availableCoupons.length">
+  <p class="available-coupons-label">Available offers</p>
+  <div
+    class="available-coupon-row"
+    *ngFor="let c of availableCoupons"
+    (click)="selectCoupon(c)">
+    <span class="coupon-chip">{{ c.couponCode }}</span>
+    <span class="coupon-chip-desc">
+      {{ c.discountType === 'Flat' ? '₹' + c.discountValue + ' off' : c.discountValue + '% off' }}
+    </span>
+  </div>
+</div>
+
+      <div class="summary-divider"></div>
+
+      <div class="summary-row discount-row" *ngIf="discount > 0">
+  <span>Discount</span>
+  <span>−₹{{ discount | number }}</span>
+</div>
+
+      <div class="summary-row total">
+        <span>Total</span>
+        <span>₹{{ total | number }}</span>
+      </div>
+
+      <button class="btn-checkout" (click)="proceedToCheckout()">
+        Proceed to Checkout
+      </button>
+
+      <a routerLink="/products" class="continue-shopping">← Continue Shopping</a>
+    </aside>
+  </div>
+
+  <!-- ================= RECOMMENDATIONS ================= -->
+  <section class="cart-recommendations" *ngIf="!loading && recommendedProducts.length">
+    <h2>You Might Also Like</h2>
+    <div class="rec-row">
+      <div class="rec-card" *ngFor="let p of recommendedProducts" (click)="goToProduct(p)">
+        <div class="rec-img">
+          <img [src]="'http://localhost:5146' + (p.imagepath?.[0] || '')" [alt]="p.productName">
+        </div>
+        <p class="rec-name">{{ p.productName }}</p>
+        <p class="rec-price">₹{{ p.productPrice | number }}</p>
+      </div>
+    </div>
+  </section>
+
+</main>>

@@ -1,0 +1,249 @@
+<main class="addresses-page">
+
+  <div class="addresses-shell">
+
+    <!-- ============ HEADER ============ -->
+    <header class="addresses-header">
+      <div>
+        <p class="eyebrow">Your Account</p>
+        <h1>Addresses</h1>
+      </div>
+
+      <button
+        type="button"
+        class="btn btn-primary"
+        *ngIf="!loading()"
+        (click)="openForm()"
+      >
+        + Add New Address
+      </button>
+    </header>
+
+    <!-- ============ QUICK LINKS ============ -->
+    <nav class="quick-links" aria-label="Account sections">
+      <a routerLink="/consumerNavbar/profile" class="quick-link">Profile</a>
+      <a routerLink="/consumerNavbar/orders" class="quick-link">Orders</a>
+      <a routerLink="/consumerNavbar/address" class="quick-link is-active">Addresses</a>
+      <a routerLink="/consumerNavbar/change-password" class="quick-link">Change Password</a>
+    </nav>
+
+    <!-- ============ BANNERS ============ -->
+    <div class="banner banner-success" *ngIf="successMessage()" [@bannerIn]>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6L9 17l-5-5" /></svg>
+      <span>{{ successMessage() }}</span>
+    </div>
+
+    <div class="banner banner-error" *ngIf="errorMessage() && !loading()" [@bannerIn]>
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="9" />
+        <path d="M12 8v5M12 16h.01" />
+      </svg>
+      <span>{{ errorMessage() }}</span>
+    </div>
+
+    <!-- ============ LOADING SKELETON ============ -->
+    <div class="address-list" *ngIf="loading()">
+      <div class="address-card skeleton" *ngFor="let i of [1,2]">
+        <div class="skeleton-line w-30"></div>
+        <div class="skeleton-line w-70"></div>
+        <div class="skeleton-line w-50"></div>
+      </div>
+    </div>
+
+    <!-- ============ EMPTY STATE ============ -->
+    <div class="state-panel" *ngIf="!loading() && !hasAddresses()">
+      <svg viewBox="0 0 24 24" class="state-icon" aria-hidden="true">
+        <path d="M12 22s8-7.2 8-13a8 8 0 1 0-16 0c0 5.8 8 13 8 13z" />
+        <circle cx="12" cy="9" r="2.6" />
+      </svg>
+      <h2>No saved addresses</h2>
+      <p>Add a delivery address to speed up checkout next time.</p>
+      <button type="button" class="btn btn-primary" (click)="openForm()">
+        Add Your First Address
+      </button>
+    </div>
+
+    <!-- ============ ADDRESS LIST ============ -->
+    <div class="address-list" *ngIf="!loading() && hasAddresses()" [@listStagger]>
+
+      <article class="address-card" *ngFor="let a of sortedAddresses()">
+
+        <div class="address-card-top">
+          <h3>{{ a.fullName }}</h3>
+          <span class="badge-default" *ngIf="a.isDefault">Default</span>
+        </div>
+
+        <p class="address-line">{{ a.addressLine }}</p>
+        <p class="address-line">{{ a.city }}, {{ a.state }} &ndash; {{ a.pincode }}</p>
+        <p class="address-phone">{{ a.phone }}</p>
+
+        <div class="address-actions">
+          <button type="button" class="btn btn-secondary btn-sm" (click)="editAddress(a)">Edit</button>
+        </div>
+
+        <div class="address-actions">
+          <button
+            type="button"
+            class="btn btn-ghost btn-sm"
+            [disabled]="deletingId() === a.addressId"
+            (click)="deleteAddress(a)"
+          >
+            {{ deletingId() === a.addressId ? 'Removing\u2026' : 'Remove' }}
+          </button>
+        </div>
+
+      </article>
+
+    </div>
+
+  </div>
+
+  <!-- ============ ADD ADDRESS SLIDE-OVER ============ -->
+  <ng-container *ngIf="showForm()">
+
+    <div class="track-overlay" [@overlayFade] (click)="closeForm()"></div>
+
+    <aside
+      class="track-panel"
+      [@panelSlide]
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="add-address-heading"
+    >
+      <div class="track-panel-header">
+        <h2 id="add-address-heading">Add New Address</h2>
+        <button
+          type="button"
+          class="icon-btn"
+          (click)="closeForm()"
+          aria-label="Close"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6 6l12 12M18 6L6 18" />
+          </svg>
+        </button>
+      </div>
+
+      <button
+        type="button"
+        class="location-btn"
+        (click)="useCurrentLocation()"
+        [disabled]="locating()"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 22s8-7.2 8-13a8 8 0 1 0-16 0c0 5.8 8 13 8 13z" />
+          <circle cx="12" cy="9" r="2.6" />
+        </svg>
+        {{ locating() ? 'Locating\u2026' : locationCaptured() ? 'Location Captured' : 'Use Current Location' }}
+      </button>
+      <p class="location-error" *ngIf="locationError()">{{ locationError() }}</p>
+
+      <form [formGroup]="form" (ngSubmit)="saveAddress()" class="address-form" novalidate>
+
+        <div class="field">
+          <label for="fullName">Full Name</label>
+          <input
+            id="fullName"
+            type="text"
+            formControlName="fullName"
+            [class.is-invalid]="f['fullName'].touched && f['fullName'].invalid"
+            placeholder="Recipient's full name"
+          />
+          <small class="error-text" *ngIf="f['fullName'].touched && f['fullName'].invalid">
+            Full name is required.
+          </small>
+        </div>
+
+        <div class="field">
+          <label for="phone">Phone Number</label>
+          <input
+            id="phone"
+            type="tel"
+            formControlName="phone"
+            [class.is-invalid]="f['phone'].touched && f['phone'].invalid"
+            placeholder="10-digit mobile number"
+          />
+          <small class="error-text" *ngIf="f['phone'].touched && f['phone'].invalid">
+            Enter a valid 10-digit phone number.
+          </small>
+        </div>
+
+        <div class="field">
+          <label for="addressLine">Address</label>
+          <textarea
+            id="addressLine"
+            formControlName="addressLine"
+            rows="2"
+            [class.is-invalid]="f['addressLine'].touched && f['addressLine'].invalid"
+            placeholder="House / street / area"
+          ></textarea>
+          <small class="error-text" *ngIf="f['addressLine'].touched && f['addressLine'].invalid">
+            Address is required.
+          </small>
+        </div>
+
+        <div class="field-grid">
+          <div class="field">
+            <label for="city">City</label>
+            <input
+              id="city"
+              type="text"
+              formControlName="city"
+              [class.is-invalid]="f['city'].touched && f['city'].invalid"
+              placeholder="City"
+            />
+            <small class="error-text" *ngIf="f['city'].touched && f['city'].invalid">
+              City is required.
+            </small>
+          </div>
+
+          <div class="field">
+            <label for="state">State</label>
+            <input
+              id="state"
+              type="text"
+              formControlName="state"
+              [class.is-invalid]="f['state'].touched && f['state'].invalid"
+              placeholder="State"
+            />
+            <small class="error-text" *ngIf="f['state'].touched && f['state'].invalid">
+              State is required.
+            </small>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="pincode">Pincode</label>
+          <input
+            id="pincode"
+            type="text"
+            inputmode="numeric"
+            formControlName="pincode"
+            [class.is-invalid]="f['pincode'].touched && f['pincode'].invalid"
+            placeholder="6-digit pincode"
+          />
+          <small class="error-text" *ngIf="f['pincode'].touched && f['pincode'].invalid">
+            Enter a valid 6-digit pincode.
+          </small>
+        </div>
+
+        <label class="checkbox-row">
+          <input type="checkbox" formControlName="isDefault" />
+          <span>Set as default address</span>
+        </label>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" (click)="closeForm()">
+            Cancel
+          </button>
+          <button type="submit" class="btn btn-primary" [disabled]="saving()">
+            {{ saving() ? 'Saving\u2026' : 'Save Address' }}
+          </button>
+        </div>
+
+      </form>
+    </aside>
+
+  </ng-container>
+
+</main>

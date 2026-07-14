@@ -1,0 +1,136 @@
+<div class="retailer-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <h1 class="brand-text">
+  Urban Nest Seller
+  <div class="notification-wrapper">
+    <app-notification-panel role="Retailer"></app-notification-panel>
+  </div>
+</h1>
+
+    <a
+      routerLink="retailerdashboard"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      <i class="fas fa-chart-line nav-icon"></i>
+      <span>Dashboard</span>
+    </a>
+
+    <a
+      routerLink="products"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      <i class="fas fa-box-open nav-icon"></i>
+      <span>My Products</span>
+    </a>
+
+    <a
+      routerLink="retailerOrders"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      <i class="fas fa-shopping-bag nav-icon"></i>
+      <span>Orders</span>
+    </a>
+
+    <a
+      routerLink="customers"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      <i class="fas fa-users nav-icon"></i>
+      <span>Customers</span>
+    </a>
+
+    <a
+      routerLink="add-product"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      <i class="fas fa-plus-circle nav-icon"></i>
+      <span>Add Product</span>
+    </a>
+
+    <a
+      routerLink="reviews"
+      routerLinkActive="active"
+    >
+      <i class="fas fa-star nav-icon"></i>
+      <span>Reviews</span>
+    </a>
+
+    <a
+      routerLink="coupons"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      <i class="fas fa-ticket-alt nav-icon"></i>
+      <span>Coupons</span>
+    </a>
+
+    <!-- PROFILE -->
+    <div class="profile-wrapper" (click)="toggleDropdown()">
+
+      <div class="profile-header">
+
+        <div class="profile-icon">
+          <i class="fas fa-user-circle"></i>
+        </div>
+
+        <span class="username">
+          {{ userName }}
+        </span>
+
+        <span class="arrow">
+          <i
+            class="fas"
+            [ngClass]="showDropdown ? 'fa-chevron-up' : 'fa-chevron-down'"
+          ></i>
+        </span>
+
+      </div>
+
+      <div
+        class="profile-dropdown"
+        *ngIf="showDropdown"
+      >
+
+        <a
+          routerLink="/retailerNavbar/retailer-profile"
+          (click)="$event.stopPropagation()"
+        >
+          <i class="fas fa-user"></i>
+          View Profile
+        </a>
+
+        <a
+          routerLink="/retailerNavbar/change-password"
+          (click)="$event.stopPropagation()"
+        >
+          <i class="fas fa-key"></i>
+          Change Password
+        </a>
+
+        <button
+          (click)="logout(); $event.stopPropagation()"
+        >
+          <i class="fas fa-sign-out-alt"></i>
+          Logout
+        </button>
+
+      </div>
+
+    </div>
+
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="content">
+    <router-outlet></router-outlet>
+  </main>
+
+</div>

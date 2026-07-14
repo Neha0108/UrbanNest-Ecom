@@ -1,0 +1,53 @@
+<section class="offers-section" [class.compact]="compact">
+
+  <div class="offers-header" *ngIf="!compact">
+    <p class="eyebrow">Deals For You</p>
+    <h1>Available Offers</h1>
+    <span>Grab these coupons and save on your next order.</span>
+  </div>
+
+  <div class="offers-header-compact" *ngIf="compact">
+    <h2>Available Offers</h2>
+    <button class="view-all-btn" (click)="viewAllOffers()">View All →</button>
+  </div>
+
+  <div *ngIf="loading" class="state-card">Loading offers...</div>
+  <div *ngIf="!loading && errorMessage" class="state-card error">{{ errorMessage }}</div>
+  <div *ngIf="!loading && !errorMessage && coupons.length === 0" class="state-card">
+    No active offers right now — check back soon!
+  </div>
+
+  <div class="offers-grid" *ngIf="!loading && coupons.length > 0">
+    <div class="offer-card" *ngFor="let c of coupons; trackBy: trackByCouponId">
+
+      <div class="offer-ribbon">{{ discountLabel(c) }}</div>
+
+      <div class="offer-body">
+        <div class="offer-code-row">
+          <span class="offer-code">{{ c.couponCode }}</span>
+          <button class="copy-btn" (click)="copyCode(c.couponCode)">
+            {{ copiedCode === c.couponCode ? 'Copied!' : 'Copy' }}
+          </button>
+        </div>
+
+        <p class="offer-desc">{{ c.description || 'Save on your order with this coupon.' }}</p>
+
+        <div class="offer-meta">
+          <span class="scope-tag" [class.retailer-tag]="c.couponScope === 'Retailer'">
+            {{ scopeLabel(c) }}
+          </span>
+          <span *ngIf="c.minimumOrderAmount > 0" class="min-order">
+            Min. order ₹{{ c.minimumOrderAmount }}
+          </span>
+        </div>
+
+        <div class="offer-footer">
+          <span class="expiry">Valid till {{ c.expiryDate | date:'mediumDate' }}</span>
+          <button class="apply-btn" (click)="applyAtCheckout(c)">Apply Now</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</section>

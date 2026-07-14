@@ -1,0 +1,208 @@
+/* Container */
+.container {
+  background: radial-gradient(circle at top right, rgba(255, 196, 0, 0.08), transparent 40%),
+              #0b0b0b;
+}
+
+/* Title */
+h2 {
+  color: #f5d06f;
+  font-weight: 600;
+}
+
+/* Product Card */
+.product-card {
+  position: relative;
+  overflow: hidden;
+
+  background: rgba(20, 20, 20, 0.85);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 196, 0, 0.12);
+
+  backdrop-filter: blur(16px);
+  box-shadow: 0 0 20px rgba(255, 196, 0, 0.06);
+
+  padding: 18px;
+  transition: all 0.4s ease;
+}
+
+/* Glow Hover */
+.product-card:hover {
+  transform: translateY(-10px) scale(1.01);
+  box-shadow:
+    0 0 30px rgba(255, 196, 0, 0.25),
+    0 0 80px rgba(255, 196, 0, 0.08);
+}
+
+/* Image Wrapper */
+.img-wrapper {
+  position: relative;
+  overflow: hidden;
+  border-radius: 14px;
+}
+
+/* Image */
+.product-img {
+  height: 230px;
+  object-fit: cover;
+  border-radius: 14px;
+  transition: transform 0.6s ease;
+}
+
+/* Zoom Effect */
+.product-card:hover .product-img {
+  transform: scale(1.1);
+}
+
+/* Image Overlay */
+.img-wrapper::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
+  opacity: 0;
+  transition: 0.3s;
+}
+
+.product-card:hover .img-wrapper::after {
+  opacity: 1;
+}
+
+/* Floating Buttons */
+.edit-btn,
+.delete-btn {
+  position: absolute;
+  bottom: 10px;
+
+  opacity: 0;
+  transform: translateY(10px);
+  transition: 0.3s ease;
+}
+
+.edit-btn {
+  left: 10px;
+}
+
+.delete-btn {
+  right: 10px;
+}
+
+/* Show on hover */
+.product-card:hover .edit-btn,
+.product-card:hover .delete-btn {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Title */
+.card-title {
+  color: #fff;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+/* Category Badge */
+.category-badge {
+  background: rgba(245, 197, 66, 0.15);
+  color: #f5c542;
+  border-radius: 20px;
+  font-size: 11px;
+  padding: 6px 12px;
+}
+
+/* Description */
+.product-desc {
+  color: #aaa;
+  font-size: 13px;
+  margin-top: 10px;
+  line-height: 1.5;
+}
+
+/* PRICE HIGHLIGHT */
+.card-text strong {
+  color: #f5c542;
+  font-size: 18px;
+}
+
+/* Stock */
+.card-text {
+  color: #ccc;
+}
+
+/* LOW STOCK BADGE (auto style) */
+.card-text::after {
+  content: '';
+}
+
+/* Buttons (Base styles) */
+.edit-btn {
+  background: linear-gradient(135deg, #f5c542, #c99b1c);
+  border: none;
+  color: black;
+  border-radius: 50px;
+  padding: 10px 60px;
+  font-size: 12px;
+}
+
+.delete-btn {
+  background: rgba(255, 77, 77, 0.2);
+  border: none;
+  color: #ff6b6b;
+  border-radius: 50px;
+  padding: 10px 60px;
+  font-size: 12px;
+}
+
+.edit-btn:hover {
+  box-shadow: 0 0 10px rgba(245, 197, 66, 0.6);
+}
+
+.delete-btn:hover {
+  background: #ff4d4d;
+  color: #fff;
+}
+
+/* Carousel bullets */
+.carousel-indicators button {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #888;
+}
+
+.carousel-indicators .active {
+  background-color: #f5c542;
+}
+
+/* Controls */
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  filter: invert(1);
+}
+
+/* Smooth appearance */
+.product-card {
+  animation: fadeUp 0.5s ease;
+}
+
+.low-stock {
+  background: rgba(255, 77, 77, 0.2);
+  color: #ff6b6b;
+  padding: 4px 10px;
+  border-radius: 70px;
+  font-size: 11px;
+  margin-top: 6px;
+  display: inline-block;
+}
+
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

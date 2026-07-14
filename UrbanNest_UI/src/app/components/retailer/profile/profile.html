@@ -1,0 +1,441 @@
+<div class="profile-page">
+
+  <!-- =======================
+        LOADING
+  ======================== -->
+
+  <div class="loading-container" *ngIf="loading">
+
+    <div class="loader"></div>
+
+    <p>Loading Store Profile...</p>
+
+  </div>
+
+  <div *ngIf="!loading">
+
+    <!-- =======================
+          SUCCESS MESSAGE
+    ======================== -->
+
+    <div class="success-box" *ngIf="successMessage">
+      {{ successMessage }}
+    </div>
+
+    <!-- =======================
+          ERROR MESSAGE
+    ======================== -->
+
+    <div class="error-box" *ngIf="errorMessage">
+      {{ errorMessage }}
+    </div>
+
+    <!-- =======================
+          HERO
+    ======================== -->
+
+    <section class="profile-hero">
+
+      <div class="hero-content">
+
+        <div class="profile-avatar">
+
+          {{ shopInitial }}
+
+        </div>
+
+        <div class="hero-info">
+
+          <h1>
+
+            {{ form.get('ShopName')?.value || 'UrbanNest Store' }}
+
+          </h1>
+
+          <p>
+
+            {{ form.get('Email')?.value }}
+
+          </p>
+
+          <div class="hero-badges">
+
+            <span class="badge verified">
+
+              ✓ Verified Retailer
+
+            </span>
+
+            <span class="badge premium">
+
+              Premium Partner
+
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- =======================
+          QUICK STATS
+    ======================== -->
+
+    <section class="stats-grid">
+
+      <div class="stat-card">
+
+        <h2>{{ profileCompletion }}%</h2>
+
+        <span>Completed</span>
+
+      </div>
+
+      <div class="stat-card">
+
+        <h2>
+
+          {{ retailerProfile?.gstNumber ? '✔' : '✖' }}
+
+        </h2>
+
+        <span>GST Verified</span>
+
+      </div>
+
+      <div class="stat-card">
+
+        <h2>
+
+          {{ retailerProfile?.panNumber ? '✔' : '✖' }}
+
+        </h2>
+
+        <span>PAN Linked</span>
+
+      </div>
+
+      <div class="stat-card">
+
+        <h2>
+
+          {{ retailerProfile?.ifscCode ? '✔' : '✖' }}
+
+        </h2>
+
+        <span>Bank Verified</span>
+
+      </div>
+
+    </section>
+
+    <!-- =======================
+          MAIN LAYOUT
+    ======================== -->
+
+    <div class="profile-layout">
+
+      <!-- Sidebar -->
+
+      <aside class="profile-sidebar">
+
+        <div class="sidebar-card">
+
+          <ul>
+
+            <li [class.active]="activeSection === 'shop'" (click)="activeSection = 'shop'; scrollTo('shop')">
+
+              🏪
+              <span>Shop Information</span>
+
+            </li>
+
+            <li [class.active]="activeSection === 'address'" (click)="activeSection = 'address'; scrollTo('address')">
+
+              📍
+              <span>Address</span>
+
+            </li>
+
+            <li [class.active]="activeSection === 'contact'" (click)="activeSection = 'contact'; scrollTo('contact')">
+
+              📞
+              <span>Contact</span>
+
+            </li>
+
+            <li [class.active]="activeSection === 'business'"
+              (click)="activeSection = 'business'; scrollTo('business')">
+
+              🧾
+              <span>Business</span>
+
+            </li>
+
+            <li [class.active]="activeSection === 'bank'" (click)="activeSection = 'bank'; scrollTo('bank')">
+
+              🏦
+              <span>Bank Details</span>
+
+            </li>
+
+          </ul>
+
+        </div>
+
+      </aside>
+
+      <!-- RIGHT CONTENT -->
+
+      <section class="profile-content">
+
+        <form [formGroup]="form" class="profile-form">
+          <!-- =========================
+              SHOP INFORMATION
+        ========================== -->
+
+          <div class="profile-card" id="shop">
+
+            <div class="card-header">
+              <div>
+                <h3>🏪 Shop Information</h3>
+                <p>Manage your store identity</p>
+              </div>
+            </div>
+
+            <div class="form-grid">
+
+              <div class="form-group">
+                <label>Shop Name</label>
+                <input class="input" formControlName="ShopName" placeholder="Enter Shop Name">
+              </div>
+
+              <div class="form-group">
+                <label>Email</label>
+                <input class="input" formControlName="Email" placeholder="Enter Email">
+              </div>
+
+              <div class="form-group full">
+                <label>Shop Description</label>
+                <textarea rows="5" class="input" formControlName="ShopDescription"
+                  placeholder="Tell customers about your store">
+              </textarea>
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- =========================
+              ADDRESS
+        ========================== -->
+
+          <div class="profile-card" id="address">
+
+            <div class="card-header">
+              <div>
+                <h3>📍 Address Details</h3>
+                <p>Your business location</p>
+              </div>
+            </div>
+
+            <div class="form-grid">
+
+              <div class="form-group full">
+
+                <label>Address</label>
+
+                <input class="input" formControlName="Address" placeholder="Complete Address">
+
+              </div>
+
+              <div class="form-group">
+
+                <label>City</label>
+
+                <input class="input" formControlName="City">
+
+              </div>
+
+              <div class="form-group">
+
+                <label>State</label>
+
+                <input class="input" formControlName="State">
+
+              </div>
+
+              <div class="form-group">
+
+                <label>Pincode</label>
+
+                <input class="input" formControlName="Pincode">
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- =========================
+             CONTACT DETAILS
+        ========================== -->
+
+          <div class="profile-card" id="contact">
+
+            <div class="card-header">
+              <div>
+                <h3>📞 Contact Details</h3>
+                <p>Primary contact information</p>
+              </div>
+            </div>
+
+            <div class="form-grid">
+
+              <div class="form-group">
+
+                <label>Phone Number</label>
+
+                <input class="input" formControlName="ContactNumber">
+
+              </div>
+
+              <div class="form-group">
+
+                <label>Email Address</label>
+
+                <input class="input" formControlName="Email">
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- =========================
+            BUSINESS DETAILS
+        ========================== -->
+
+          <div class="profile-card" id="business">
+
+            <div class="card-header">
+
+              <div>
+
+                <h3>🧾 Business Details</h3>
+
+                <p>Government & Tax Information</p>
+
+              </div>
+
+            </div>
+
+            <div class="form-grid">
+
+              <div class="form-group">
+
+                <label>GST Number</label>
+
+                <input class="input" formControlName="GSTNumber">
+
+              </div>
+
+              <div class="form-group">
+
+                <label>PAN Number</label>
+
+                <input class="input" formControlName="PANNumber">
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- =========================
+             BANK DETAILS
+        ========================== -->
+
+          <div class="profile-card" id="bank">
+
+            <div class="card-header">
+
+              <div>
+
+                <h3>🏦 Bank Details</h3>
+
+                <p>Settlement account information</p>
+
+              </div>
+
+            </div>
+
+            <div class="form-grid">
+
+              <div class="form-group">
+
+                <label>Account Holder Name</label>
+
+                <input class="input" formControlName="AccountHolderName">
+
+              </div>
+
+              <div class="form-group">
+
+                <label>Account Number</label>
+
+                <input class="input" formControlName="BankAccountNumber">
+
+              </div>
+
+              <div class="form-group full">
+
+                <label>IFSC Code</label>
+
+                <input class="input" formControlName="IFSCCode">
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- =========================
+              ACTION BUTTONS
+        ========================== -->
+
+          <div class="action-area">
+
+            <button type="button" class="btn-save" (click)="update()" [disabled]="loading">
+
+              <span *ngIf="!loading">
+
+                💾 Save Changes
+
+              </span>
+
+              <span *ngIf="loading">
+
+                Saving...
+
+              </span>
+
+            </button>
+
+          </div>
+
+        </form>
+
+      </section>
+
+    </div>
+
+  </div>

@@ -1,0 +1,460 @@
+
+.retailer-layout {
+  display: flex;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top right,
+      rgba(212, 175, 55, 0.08),
+      transparent 30%),
+    #080a0f;
+}
+
+.brand-text {
+  margin: 0;
+  color: #d4af37;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+/* ==========================
+   NOTIFICATION AREA
+========================== */
+
+.notification-wrapper {
+  position: relative;
+  display: flex;
+  align-items: left;
+  justify-content: center;
+}
+
+/* Bell Button */
+
+.notification-wrapper .notification-btn,
+.notification-wrapper button {
+  position: relative;
+
+  width: 42px;
+  height: 42px;
+
+  border-radius: 50%;
+
+  border: 1px solid rgba(212, 175, 55, 0.2);
+
+  background: yellow;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #d4af37;
+
+  cursor: pointer;
+
+  transition: all 0.25s ease;
+}
+
+.notification-wrapper button:hover {
+  background: rgba(212, 175, 55, 0.15);
+  transform: scale(1.05);
+}
+
+/* Notification Count Badge */
+
+.notification-count,
+.badge,
+.notification-badge {
+  position: absolute;
+
+  top: -4px;
+  right: -4px;
+
+  min-width: 18px;
+  height: 18px;
+
+  padding: 0 5px;
+
+  border-radius: 999px;
+
+  background: #ef4444;
+
+  color: white;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 2px solid #111827;
+}
+
+/* Notification Dropdown */
+
+.notification-panel,
+.notification-dropdown {
+  position: absolute;
+
+  top: calc(100% + 10px);
+  right: 0;
+
+  width: 320px;
+  max-height: 420px;
+
+  overflow-y: auto;
+
+  background: #111827;
+
+  border: 1px solid rgba(212, 175, 55, 0.15);
+
+  border-radius: 16px;
+
+  box-shadow:
+    0 15px 40px rgba(0, 0, 0, 0.45);
+
+  z-index: 9999;
+}
+
+/* =========================================
+   SIDEBAR
+========================================= */
+
+.sidebar {
+  width: 280px;
+  flex-shrink: 0;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(15, 18, 25, 0.98),
+      rgba(10, 12, 18, 0.98)
+    );
+
+  border-right: 1px solid rgba(212, 175, 55, 0.15);
+
+  padding: 28px 18px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  position: sticky;
+  top: 0;
+
+  height: 100vh;
+
+  backdrop-filter: blur(16px);
+
+  box-shadow:
+    inset -1px 0 0 rgba(212, 175, 55, 0.08),
+    10px 0 40px rgba(0, 0, 0, 0.25);
+
+  overflow-y: auto;
+}
+
+/* =========================================
+   SCROLLBAR
+========================================= */
+
+.sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: rgba(212, 175, 55, 0.25);
+  border-radius: 20px;
+}
+
+/* =========================================
+   BRAND
+========================================= */
+
+.brand-text {
+  color: #d4af37;
+
+  font-size: 1.25rem;
+  font-weight: 700;
+
+  margin-bottom: 28px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 12px;
+
+  padding-bottom: 18px;
+
+  border-bottom: 1px solid rgba(212, 175, 55, 0.12);
+}
+
+/* =========================================
+   NAVIGATION LINKS
+========================================= */
+
+.sidebar > a {
+  text-decoration: none;
+
+  display: flex;
+  align-items: center;
+
+  gap: 14px;
+
+  padding: 14px 16px;
+
+  border-radius: 14px;
+
+  color: #b8bec8;
+
+  font-size: 0.95rem;
+  font-weight: 500;
+
+  transition: all 0.25s ease;
+}
+
+.sidebar > a:hover {
+  background: rgba(212, 175, 55, 0.08);
+
+  color: #f3d36a;
+
+  transform: translateX(4px);
+}
+
+/* Active Link */
+
+.sidebar > a.active {
+  background:
+    linear-gradient(
+      90deg,
+      rgba(212, 175, 55, 0.16),
+      rgba(212, 175, 55, 0.05)
+    );
+
+  color: #d4af37;
+
+  border: 1px solid rgba(212, 175, 55, 0.2);
+
+  box-shadow:
+    0 0 18px rgba(212, 175, 55, 0.08);
+}
+
+/* =========================================
+   ICONS
+========================================= */
+
+.nav-icon {
+  width: 22px;
+  text-align: center;
+
+  color: #d4af37;
+
+  font-size: 15px;
+}
+
+/* =========================================
+   PROFILE SECTION
+========================================= */
+
+.profile-wrapper {
+  margin-top: auto;
+
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+
+  padding-top: 18px;
+
+  position: relative;
+
+  cursor: pointer;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 12px;
+
+  border-radius: 14px;
+
+  transition: all 0.25s ease;
+}
+
+.profile-header:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* Profile Avatar */
+
+.profile-icon {
+  width: 42px;
+  height: 42px;
+
+  border-radius: 50%;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(212, 175, 55, 0.25),
+      rgba(212, 175, 55, 0.08)
+    );
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+}
+
+.profile-icon i {
+  color: #d4af37;
+  font-size: 18px;
+}
+
+.username {
+  flex: 1;
+
+  color: #f2f2f2;
+
+  font-size: 0.92rem;
+  font-weight: 500;
+
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.arrow i {
+  color: #8f96a2;
+  font-size: 12px;
+}
+
+/* =========================================
+   DROPDOWN
+========================================= */
+
+.profile-dropdown {
+  position: absolute;
+
+  left: 0;
+  right: 0;
+
+  bottom: calc(100% + 10px);
+
+  background:
+    rgba(15, 18, 24, 0.98);
+
+  border: 1px solid rgba(212, 175, 55, 0.12);
+
+  border-radius: 16px;
+
+  padding: 8px;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+
+  backdrop-filter: blur(16px);
+
+  box-shadow:
+    0 14px 30px rgba(0, 0, 0, 0.45);
+}
+
+.profile-dropdown a,
+.profile-dropdown button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  width: 100%;
+
+  border: none;
+  background: transparent;
+
+  padding: 12px;
+
+  border-radius: 10px;
+
+  color: #d0d0d0;
+
+  text-decoration: none;
+
+  cursor: pointer;
+
+  font-size: 0.9rem;
+
+  transition: all 0.2s ease;
+}
+
+.profile-dropdown a:hover,
+.profile-dropdown button:hover {
+  background: rgba(212, 175, 55, 0.08);
+  color: #d4af37;
+}
+
+.profile-dropdown i {
+  width: 18px;
+  text-align: center;
+}
+
+.profile-dropdown button:last-child {
+  color: #ff7d7d;
+}
+
+.profile-dropdown button:last-child:hover {
+  background: rgba(255, 125, 125, 0.1);
+  color: #ff8f8f;
+}
+
+/* =========================================
+   MAIN CONTENT
+========================================= */
+
+.content {
+  flex: 1;
+  min-width: 0;
+
+  padding: 24px;
+
+  overflow-y: auto;
+}
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 992px) {
+
+  .retailer-layout {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+
+    position: relative;
+
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    gap: 8px;
+  }
+
+  .brand-text {
+    width: 100%;
+    margin-bottom: 12px;
+  }
+
+  .profile-wrapper {
+    margin-top: 0;
+    border-top: none;
+    padding-top: 0;
+  }
+
+  .profile-dropdown {
+    bottom: auto;
+    top: calc(100% + 8px);
+  }
+}

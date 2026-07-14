@@ -1,0 +1,370 @@
+.main-content {
+  margin-top: 55px;
+  min-height: 100vh;   /* ✅ IMPORTANT */
+  background: linear-gradient(135deg, #0a0a0a, #181818);
+}
+/* ==========================
+   NAVBAR CONTAINER
+========================== */
+.urban-navbar{
+  background: rgba(0,0,0,0.9);
+  backdrop-filter: blur(12px);
+
+  padding: 10px 40px;   /* 🔥 increased height */
+
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.navbar-collapse {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* center tabs properly */
+.navbar-nav {
+  margin: auto;
+  flex-direction: row;
+}
+
+/* ==========================
+   BRAND
+========================== */
+
+.brand-logo{
+  width:130px;   /* thoda smaller */
+  height:auto;
+  margin-right:8px;
+}
+
+.brand-text{
+  font-size:22px;
+}
+
+.brand-text{
+  font-size: 22px;   /* 🔥 bigger */
+  font-weight: 700;
+  color: #D4AF37;
+  letter-spacing: 1px;
+}
+
+.notification-wrapper {
+  position: relative;
+  display: flex;
+  align-items: left;
+  justify-content: center;
+}
+
+/* Bell Button */
+
+.notification-wrapper .notification-btn,
+.notification-wrapper button {
+  position: relative;
+
+  width: 42px;
+  height: 42px;
+
+  border-radius: 50%;
+
+  border: 1px solid rgba(212, 175, 55, 0.2);
+
+  background:yellow;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #d4af37;
+
+  cursor: pointer;
+
+  transition: all 0.25s ease;
+}
+
+.notification-wrapper button:hover {
+  background: rgba(212, 175, 55, 0.15);
+  transform: scale(1.05);
+}
+
+/* Notification Count Badge */
+
+.notification-count,
+.badge,
+.notification-badge {
+  position: absolute;
+
+  top: -4px;
+  right: -4px;
+
+  min-width: 18px;
+  height: 18px;
+
+  padding: 0 5px;
+
+  border-radius: 999px;
+
+  background: #ef4444;
+
+  color: white;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 2px solid #111827;
+}
+
+/* Notification Dropdown */
+
+.notification-panel,
+.notification-dropdown {
+  position: absolute;
+
+  top: calc(100% + 10px);
+  right: 0;
+
+  width: 320px;
+  max-height: 420px;
+
+  overflow-y: auto;
+
+  background: #111827;
+
+  border: 1px solid rgba(212, 175, 55, 0.15);
+
+  border-radius: 16px;
+
+  box-shadow:
+    0 15px 40px rgba(0, 0, 0, 0.45);
+
+  z-index: 9999;
+}
+
+
+
+/* ==========================
+   NAV LINKS
+========================== */
+.navbar-nav{
+  gap: 18px;   /* more spacing */
+}
+
+.navbar-brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.nav-link{
+  color: #cfcfcf;
+  font-size: 17px;   /* 🔥 bigger text */
+
+  padding: 12px 28px;   /* 🔥 bigger pill */
+  border-radius: 999px;
+
+  transition: all 0.25s ease;;
+}
+
+/* hover */
+.nav-link:hover{
+  color: #D4AF37;
+  background: rgba(212,175,55,0.08);
+}
+
+/* active */
+.nav-link.active{
+  color: #D4AF37;
+  background: rgba(212,175,55,0.18);
+  border: 1px solid rgba(212,175,55,0.5);
+  padding: 12px 30px;
+}
+
+/* ==========================
+   RIGHT SIDE
+========================== */
+.navbar-right{
+  display:flex;
+  align-items:center;
+  gap:25px;
+}
+
+/* ==========================
+   PROFILE SECTION
+========================== */
+.profile-header{
+  display:flex;
+  align-items:center;
+  gap:12px;
+
+  padding:8px 16px;
+  border-radius:999px;
+}
+
+.profile-avatar{
+  width:38px;   /* bigger */
+  height:38px;
+
+  border-radius:50%;
+  background:#D4AF37;
+  color:black;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  font-size:16px;
+  font-weight:600;
+}
+
+.username{
+  font-size:15px;
+  color:#cfcfcf;
+}
+
+.arrow{
+  font-size:12px;
+  color:#D4AF37;
+}
+
+/* ==========================
+   DROPDOWN
+========================== */
+.profile-dropdown{
+  position:absolute;
+  right:0;
+  top:60px;
+
+  background:#111;
+  border:1px solid rgba(255,255,255,0.08);
+
+  border-radius:12px;
+  width:190px;
+
+  box-shadow:0 10px 30px rgba(0,0,0,0.6);
+}
+
+.profile-dropdown a,
+.profile-dropdown button{
+  padding:13px 16px;
+  font-size:15px;
+}
+/* ==========================
+   PROFILE WRAPPER
+========================== */
+.profile-wrapper{
+  position: relative;
+  cursor: pointer;
+}
+
+/* ==========================
+   PROFILE HEADER (CLICK AREA)
+========================== */
+.profile-header{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 8px 16px;
+  border-radius: 999px;
+
+  transition: all 0.3s ease;
+}
+
+.profile-header:hover{
+  background: rgba(255,255,255,0.05);
+}
+
+/* ==========================
+   DROPDOWN CONTAINER
+========================== */
+.profile-dropdown{
+  position: absolute;
+  top: 55px;
+  right: 0;
+
+  width: 200px;
+  background: #111;
+
+  border-radius: 14px;
+  overflow: hidden;
+
+  border: 1px solid rgba(255,255,255,0.08);
+
+  box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+
+  animation: dropdownFade 0.2s ease;
+  z-index: 999;
+}
+
+/* ==========================
+   DROPDOWN ITEMS
+========================== */
+.profile-dropdown a,
+.profile-dropdown button{
+  display: block;
+  width: 100%;
+
+  padding: 14px 18px;
+  text-align: left;
+
+  color: #ddd;
+  font-size: 14.5px;
+
+  background: transparent;
+  border: none;
+
+  transition: all 0.25s ease;
+}
+
+/* hover effect */
+.profile-dropdown a:hover,
+.profile-dropdown button:hover{
+  background: rgba(212,175,55,0.12);
+  color: #D4AF37;
+}
+
+/* logout special */
+.profile-dropdown button{
+  border-top: 1px solid rgba(255,255,255,0.05);
+  color: #ff6b6b;
+}
+
+.profile-dropdown button:hover{
+  background: rgba(255,107,107,0.08);
+  color: #ff6b6b;
+}
+.main-content {
+  position: relative;
+}
+
+app-chatbot {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1000;
+  display: block;
+}
+
+@media (max-width: 480px) {
+  app-chatbot {
+    bottom: 0;
+    right: 0;
+    left: 0;
+  }
+}
+
+/* ==========================
+   ANIMATION
+========================== */
+@keyframes dropdownFade{
+  from{
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to{
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
