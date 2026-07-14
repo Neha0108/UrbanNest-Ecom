@@ -1,0 +1,151 @@
+<main class="products-page">
+
+  <!-- ================= PAGE HEADER ================= -->
+  <header class="products-header">
+    <div class="header-text">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a routerLink="/">Home</a>
+        <span>/</span>
+        <span>{{ selectedCategory || 'All Products' }}</span>
+      </nav>
+      <h1>{{ selectedCategory || 'All Products' }}</h1>
+      <p>{{ filteredProducts.length }} product{{ filteredProducts.length === 1 ? '' : 's' }} found</p>
+    </div>
+
+    <div class="header-controls">
+      <button class="filter-toggle-mobile" (click)="toggleFilters()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M4 6h16M7 12h10M10 18h4" />
+        </svg>
+        Filters
+      </button>
+
+      <select class="sort-select" [value]="sortBy" (change)="onSortChange($any($event.target).value)">
+        <option value="newest">Newest</option>
+        <option value="price-low">Price: Low to High</option>
+        <option value="price-high">Price: High to Low</option>
+        <option value="name">Name: A-Z</option>
+      </select>
+    </div>
+  </header>
+
+  <div class="products-layout">
+
+    <!-- ================= SIDEBAR FILTERS ================= -->
+    <aside class="filters-sidebar" [class.open]="filtersOpen">
+
+      <div class="filters-sidebar-header">
+        <h3>Filters</h3>
+        <button class="close-filters" (click)="toggleFilters()" aria-label="Close filters">✕</button>
+      </div>
+
+      <div class="filter-group">
+        <h4>Category</h4>
+        <ul class="filter-list">
+          <li>
+            <button class="filter-option" [class.active]="!selectedCategory" (click)="selectCategory(null)">
+              All Categories
+            </button>
+          </li>
+          <li *ngFor="let cat of categories">
+            <button class="filter-option" [class.active]="selectedCategory === cat.categoryName"
+              (click)="selectCategory(cat.categoryName)">
+              {{ cat.categoryName }}
+            </button>
+          </li>
+        </ul>
+      </div>
+
+      <div class="filter-group">
+        <h4>Price</h4>
+        <ul class="filter-list">
+          <li>
+            <button class="filter-option" [class.active]="!selectedMaxPrice" (click)="selectPrice(null)">
+              Any Price
+            </button>
+          </li>
+          <li *ngFor="let range of priceRanges">
+            <button class="filter-option" [class.active]="selectedMaxPrice === range.value"
+              (click)="selectPrice(range.value)">
+              {{ range.label }}
+            </button>
+          </li>
+        </ul>
+      </div>
+
+      <div class="filter-group">
+        <h4>Custom Price Range</h4>
+        <div class="price-range-inputs">
+          <label>
+            Min Price
+            <input type="number" min="0" [value]="minPrice ?? ''"
+              (input)="minPrice = $any($event.target).value === '' ? null : +$any($event.target).value">
+          </label>
+          <label>
+            Max Price
+            <input type="number" min="0" [value]="maxPrice ?? ''"
+              (input)="maxPrice = $any($event.target).value === '' ? null : +$any($event.target).value">
+          </label>
+        </div>
+        <div class="price-range-actions">
+          <button class="clear-filters-btn" (click)="applyPriceFilter()">Apply</button>
+          <button class="clear-filters-btn" (click)="resetPrice()">Reset</button>
+        </div>
+      </div>
+
+      <button class="clear-filters-btn"
+        *ngIf="selectedCategory || selectedMaxPrice || minPrice !== null || maxPrice !== null" (click)="clearFilters()">
+        Clear All Filters
+      </button>
+    </aside>
+
+    <div class="filters-backdrop" *ngIf="filtersOpen" (click)="toggleFilters()"></div>
+
+    <!-- ================= PRODUCT GRID ================= -->
+    <section class="products-grid-wrap">
+
+      <!-- Loading skeletons -->
+      <div class="products-grid" *ngIf="loading">
+        <div class="product-card skeleton" *ngFor="let s of [1,2,3,4,5,6,7,8]">
+          <div class="skeleton-img"></div>
+          <div class="skeleton-line short"></div>
+          <div class="skeleton-line"></div>
+        </div>
+      </div>
+
+      <!-- Empty state -->
+      <div class="empty-state" *ngIf="!loading && filteredProducts.length === 0">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+          <path d="M3 3h18v18H3V3zM8 12h8M12 8v8" />
+        </svg>
+        <h3>No products found</h3>
+        <p>Try adjusting your filters to find what you're looking for.</p>
+        <button class="clear-filters-btn" (click)="clearFilters()">Clear Filters</button>
+      </div>
+
+      <!-- Product Grid -->
+      <div class="products-grid" *ngIf="!loading && filteredProducts.length > 0">
+        <div class="product-card" *ngFor="let p of filteredProducts; trackBy: trackById" (click)="goToProduct(p)">
+
+          <div class="product-image-wrap">
+            <img [src]="'http://localhost:5146' + (p.imagepath?.[0] || '')" [alt]="p.productName" loading="lazy">
+
+            <span class="stock-badge" *ngIf="p.stock > 0 && p.stock < 10">Only {{ p.stock }} left</span>
+            <span class="stock-badge out" *ngIf="p.stock === 0">Out of Stock</span>
+
+            <button class="hover-login-btn" *ngIf="!isLoggedIn" (click)="goToLogin($event)">
+              Login to Add
+            </button>
+          </div>
+
+          <div class="product-info">
+            <p class="product-category">{{ p.categoryName }}</p>
+            <h4>{{ p.productName }}</h4>
+            <p class="product-price">₹{{ p.productPrice | number }}</p>
+          </div>
+        </div>
+      </div>
+
+    </section>
+  </div>
+</main>

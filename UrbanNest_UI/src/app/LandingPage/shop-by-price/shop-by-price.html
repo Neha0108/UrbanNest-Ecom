@@ -1,0 +1,13 @@
+<div class="price-section">
+  <h2>Shop By Price</h2>
+
+  <div class="price-grid">
+    <div 
+      class="price-card"
+      *ngFor="let item of priceRanges"
+      (click)="filterByPrice(item.value)"
+    >
+      {{ item.label }}
+    </div>
+  </div>
+</div>
