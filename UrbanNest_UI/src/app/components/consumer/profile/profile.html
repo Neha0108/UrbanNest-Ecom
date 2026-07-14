@@ -1,0 +1,175 @@
+<main class="profile-page">
+
+  <div class="profile-shell">
+
+    <!-- ============ HEADER ============ -->
+    <header class="profile-header">
+      <p class="eyebrow">Your Account</p>
+      <h1>Profile</h1>
+    </header>
+
+    <!-- ============ QUICK LINKS ============ -->
+    <nav class="quick-links" aria-label="Account sections">
+      <a routerLink="/consumerNavbar/profile" class="quick-link is-active">Profile</a>
+      <a routerLink="/consumerNavbar/orders" class="quick-link">Orders</a>
+      <a routerLink="/consumerNavbar/address" class="quick-link">Addresses</a>
+      <a routerLink="/consumerNavbar/change-password" class="quick-link">Change Password</a>
+    </nav>
+
+    <!-- ============ BANNERS ============ -->
+    <div class="banner banner-success" *ngIf="successMessage()" [@bannerIn]>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6L9 17l-5-5" /></svg>
+      <span>{{ successMessage() }}</span>
+    </div>
+
+    <div class="banner banner-error" *ngIf="errorMessage()" [@bannerIn]>
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="9" />
+        <path d="M12 8v5M12 16h.01" />
+      </svg>
+      <span>{{ errorMessage() }}</span>
+    </div>
+
+    <!-- ============ LOADING SKELETON ============ -->
+    <div class="profile-card skeleton" *ngIf="loading()">
+      <div class="skeleton-avatar"></div>
+      <div class="skeleton-fields">
+        <div class="skeleton-line w-40"></div>
+        <div class="skeleton-line w-70"></div>
+        <div class="skeleton-line w-55"></div>
+        <div class="skeleton-line w-30"></div>
+      </div>
+    </div>
+
+    <!-- ============ PROFILE FORM ============ -->
+    <section class="profile-card" *ngIf="!loading()" [@fadeIn]>
+
+      <!-- AVATAR -->
+      <div class="avatar-block">
+        <div class="avatar-wrap">
+          <img *ngIf="avatarSrc() as src" [src]="src" alt="Profile photo" class="avatar-img" />
+          <div *ngIf="!avatarSrc()" class="avatar-fallback" aria-hidden="true">
+            {{ initials() }}
+          </div>
+
+          <label class="avatar-edit" for="avatarInput" aria-label="Change profile photo">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 20h9" />
+              <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z" />
+            </svg>
+          </label>
+          <input
+            id="avatarInput"
+            type="file"
+            accept="image/*"
+            class="visually-hidden"
+            (change)="onFileSelected($event)"
+          />
+        </div>
+
+        <div class="avatar-meta">
+          <p class="avatar-name">{{ userName() || 'Your Profile' }}</p>
+          <p class="avatar-email" *ngIf="userEmail()">{{ userEmail() }}</p>
+          <button
+            type="button"
+            class="link-btn"
+            *ngIf="previewUrl()"
+            (click)="removePreview()"
+          >
+            Remove new photo
+          </button>
+        </div>
+      </div>
+
+      <!-- FORM -->
+      <form [formGroup]="form" (ngSubmit)="submit()" class="profile-form" novalidate>
+
+        <div class="field-grid">
+
+          <div class="field">
+            <label for="firstName">First Name</label>
+            <input
+              id="firstName"
+              type="text"
+              formControlName="firstName"
+              [class.is-invalid]="f['firstName'].touched && f['firstName'].invalid"
+              placeholder="Enter first name"
+            />
+            <small class="error-text" *ngIf="f['firstName'].touched && f['firstName'].invalid">
+              First name is required.
+            </small>
+          </div>
+
+          <div class="field">
+            <label for="lastName">Last Name</label>
+            <input
+              id="lastName"
+              type="text"
+              formControlName="lastName"
+              [class.is-invalid]="f['lastName'].touched && f['lastName'].invalid"
+              placeholder="Enter last name"
+            />
+            <small class="error-text" *ngIf="f['lastName'].touched && f['lastName'].invalid">
+              Last name is required.
+            </small>
+          </div>
+
+          <div class="field">
+            <label for="phone">Phone Number</label>
+            <input
+              id="phone"
+              type="tel"
+              formControlName="phone"
+              [class.is-invalid]="f['phone'].touched && f['phone'].invalid"
+              placeholder="10-digit mobile number"
+            />
+            <small class="error-text" *ngIf="f['phone'].touched && f['phone'].invalid">
+              Enter a valid 10-digit phone number.
+            </small>
+          </div>
+
+          <div class="field">
+            <label for="gender">Gender</label>
+            <select
+              id="gender"
+              formControlName="gender"
+              [class.is-invalid]="f['gender'].touched && f['gender'].invalid"
+            >
+              <option value="" disabled selected>Select gender</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+            <small class="error-text" *ngIf="f['gender'].touched && f['gender'].invalid">
+              Please select a gender.
+            </small>
+          </div>
+
+          <div class="field field-span">
+            <label for="dateOfBirth">Date of Birth</label>
+            <input
+              id="dateOfBirth"
+              type="date"
+              formControlName="dateOfBirth"
+              [class.is-invalid]="f['dateOfBirth'].touched && f['dateOfBirth'].invalid"
+            />
+            <small class="error-text" *ngIf="f['dateOfBirth'].touched && f['dateOfBirth'].invalid">
+              Date of birth is required.
+            </small>
+          </div>
+
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" [disabled]="saving()">
+            {{ saving() ? 'Saving\u2026' : 'Save Changes' }}
+          </button>
+        </div>
+
+      </form>
+
+    </section>
+
+  </div>
+
+</main>

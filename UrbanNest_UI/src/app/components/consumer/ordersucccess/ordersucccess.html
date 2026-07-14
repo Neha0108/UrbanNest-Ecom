@@ -1,0 +1,103 @@
+<main class="success-page" [@pageEnter] aria-labelledby="order-success-heading">
+
+  <div class="success-shell">
+
+    <!-- ============ CONFIRMATION CARD ============ -->
+    <section class="success-card" [@cardEnter]>
+
+      <div class="check-badge" aria-hidden="true">
+        <svg viewBox="0 0 64 64" class="check-svg">
+          <circle class="check-ring" cx="32" cy="32" r="29" />
+          <path class="check-mark" d="M20 33 L28 41 L45 22" />
+        </svg>
+      </div>
+
+      <p class="eyebrow">Payment Confirmed</p>
+
+      <h1
+        id="order-success-heading"
+        class="headline"
+        tabindex="-1"
+      >
+        Your order is on its way to being made.
+      </h1>
+
+      <p class="subcopy">
+        Thank you for choosing Urban Nest &mdash; a confirmation has been sent to
+        your email, and you can track every step from your orders page.
+      </p>
+
+      <dl class="meta-row" role="list">
+        <div class="meta-item" role="listitem">
+          <dt>Order Number</dt>
+          <dd>{{ formattedOrderId() }}</dd>
+        </div>
+        <div class="meta-divider" aria-hidden="true"></div>
+        <div class="meta-item" role="listitem">
+          <dt>Order Date</dt>
+          <dd>{{ formattedDate() }}</dd>
+        </div>
+        <div class="meta-divider" aria-hidden="true"></div>
+        <div class="meta-item" role="listitem">
+          <dt>Payment</dt>
+          <dd>{{ paymentMethod() }}</dd>
+        </div>
+      </dl>
+
+      <div class="cta-row">
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="continueShopping()"
+        >
+          Continue Shopping
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="viewOrders()"
+        >
+          View Order
+          <svg viewBox="0 0 24 24" class="btn-icon" aria-hidden="true">
+            <path d="M9 6l6 6-6 6" />
+          </svg>
+        </button>
+      </div>
+
+    </section>
+
+    <!-- ============ DELIVERY TIMELINE ============ -->
+    <section class="timeline-card" [@cardEnter] aria-label="Order delivery timeline">
+
+      <div class="timeline-header">
+        <h2>Delivery Timeline</h2>
+        <span class="timeline-eta">
+          Estimated arrival &mdash; {{ estimatedDeliveryLabel() }}
+        </span>
+      </div>
+
+      <ol class="timeline" [@staggerRows]>
+        <li
+          class="timeline-step stagger-item"
+          *ngFor="let step of timeline(); let last = last"
+          [class.is-done]="step.done"
+          [class.is-active]="step.active"
+        >
+          <div class="step-indicator" aria-hidden="true">
+            <span class="step-dot"></span>
+            <span class="step-line" *ngIf="!last"></span>
+          </div>
+
+          <div class="step-copy">
+            <p class="step-label">{{ step.label }}</p>
+            <p class="step-desc">{{ step.description }}</p>
+          </div>
+        </li>
+      </ol>
+
+    </section>
+
+  </div>
+
+</main>

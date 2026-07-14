@@ -1,0 +1,195 @@
+<main class="checkout-page">
+
+  <header class="checkout-header">
+    <h1>Checkout</h1>
+
+    <div class="steps-indicator">
+      <div
+        class="step-dot"
+        *ngFor="let s of steps; let i = index"
+        [class.active]="step === s.key"
+        [class.done]="steps.findIndex(x => x.key === step) > i"
+        (click)="goToStep(s.key)">
+        <span class="dot-num">{{ i + 1 }}</span>
+        <span class="dot-label">{{ s.label }}</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="checkout-layout">
+
+    <!-- ================= LEFT: STEP CONTENT ================= -->
+    <section class="checkout-main">
+
+      <!-- STEP 1: ADDRESS -->
+      <div class="step-panel" *ngIf="step === 'address'">
+        <h2>Delivery Address</h2>
+
+        <div class="address-list" *ngIf="addresses.length && !showAddressForm">
+          <div
+            class="address-card"
+            *ngFor="let a of addresses"
+            [class.selected]="a.addressId === selectedAddressId"
+            (click)="selectAddress(a.addressId)">
+            <div class="address-radio">
+              <span class="radio-dot" *ngIf="a.addressId === selectedAddressId"></span>
+            </div>
+            <div class="address-details">
+              <h4>{{ a.fullName }} <span class="badge" *ngIf="a.isDefault">Default</span></h4>
+              <p>{{ a.addressLine }}, {{ a.city }}, {{ a.state }} - {{ a.pincode }}</p>
+              <span class="address-phone">{{ a.phone }}</span>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn-outline-add" *ngIf="!showAddressForm" (click)="showAddressForm = true">
+          + Add New Address
+        </button>
+
+        <form class="address-form" *ngIf="showAddressForm" [formGroup]="addressForm" (ngSubmit)="saveNewAddress()">
+          <div class="form-row">
+            <div class="form-field">
+              <label>Full Name</label>
+              <input type="text" formControlName="fullName" placeholder="John Doe">
+            </div>
+            <div class="form-field">
+              <label>Phone</label>
+              <input type="text" formControlName="phone" placeholder="10-digit number">
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label>Address</label>
+            <input type="text" formControlName="addressLine" placeholder="House no, street, area">
+          </div>
+
+          <div class="form-row">
+            <div class="form-field">
+              <label>City</label>
+              <input type="text" formControlName="city">
+            </div>
+            <div class="form-field">
+              <label>State</label>
+              <input type="text" formControlName="state">
+            </div>
+            <div class="form-field">
+              <label>Pincode</label>
+              <input type="text" formControlName="pincode" maxlength="6">
+            </div>
+          </div>
+
+          <label class="checkbox-row">
+            <input type="checkbox" formControlName="isDefault">
+            Set as default address
+          </label>
+
+          <div class="form-actions">
+            <button type="submit" class="btn-primary" [disabled]="addressForm.invalid">Save Address</button>
+            <button type="button" class="btn-ghost" (click)="showAddressForm = false">Cancel</button>
+          </div>
+        </form>
+
+        <div class="step-nav">
+          <button class="btn-primary" [disabled]="!selectedAddressId" (click)="nextFromAddress()">
+            Continue to Payment
+          </button>
+        </div>
+      </div>
+
+      <!-- STEP 2: PAYMENT -->
+      <div class="step-panel" *ngIf="step === 'payment'">
+        <h2>Payment Method</h2>
+
+        <div class="payment-options">
+          <label class="payment-option" [class.selected]="paymentMethod === 'razorpay'">
+            <input type="radio" name="payment" [checked]="paymentMethod === 'razorpay'" (change)="paymentMethod = 'razorpay'">
+            <div>
+              <h4>Pay Online</h4>
+              <p>Card, UPI, Netbanking via Razorpay</p>
+            </div>
+          </label>
+
+          <label class="payment-option" [class.selected]="paymentMethod === 'cod'">
+            <input type="radio" name="payment" [checked]="paymentMethod === 'cod'" (change)="paymentMethod = 'cod'">
+            <div>
+              <h4>Cash on Delivery</h4>
+              <p>Pay when your order arrives</p>
+            </div>
+          </label>
+        </div>
+
+        <div class="step-nav">
+          <button class="btn-ghost" (click)="goToStep('address')">← Back</button>
+          <button class="btn-primary" (click)="nextFromPayment()">Continue to Review</button>
+        </div>
+      </div>
+
+      <!-- STEP 3: REVIEW -->
+      <div class="step-panel" *ngIf="step === 'review'">
+        <h2>Review Your Order</h2>
+
+        <div class="review-block" *ngIf="selectedAddress as addr">
+          <h4>Delivering To</h4>
+          <p>{{ addr.fullName }}, {{ addr.addressLine }}, {{ addr.city }}, {{ addr.state }} - {{ addr.pincode }}</p>
+          <p class="review-phone">{{ addr.phone }}</p>
+        </div>
+
+        <div class="review-block">
+          <h4>Payment Method</h4>
+          <p>{{ paymentMethod === 'razorpay' ? 'Pay Online (Razorpay)' : 'Cash on Delivery' }}</p>
+        </div>
+
+        <div class="review-block">
+          <h4>Items ({{ cartItems.length }})</h4>
+          <div class="review-item" *ngFor="let item of cartItems; trackBy: trackByProductId">
+            <img [src]="'http://localhost:5146' + (item.ImagePath?.[0] || '')" [alt]="item.ProductName">
+            <div>
+              <p class="review-item-name">{{ item.ProductName }}</p>
+              <span>Qty: {{ item.Quantity }}</span>
+            </div>
+            <span class="review-item-price">₹{{ (item.ProductPrice * item.Quantity) | number }}</span>
+          </div>
+          <div class="review-block" *ngIf="appliedCoupon">
+  <h4>Coupon Applied</h4>
+  <p>{{ appliedCoupon.couponCode }} — 
+    {{ appliedCoupon.discountType === 'Flat' ? '₹' + appliedCoupon.discountValue + ' off' : appliedCoupon.discountValue + '% off' }}
+  </p>
+</div>
+        </div>
+
+        <div class="step-nav">
+          <button class="btn-ghost" (click)="goToStep('payment')">← Back</button>
+          <button class="btn-primary" [disabled]="placingOrder" (click)="placeOrder()">
+            {{ placingOrder ? 'Placing Order...' : 'Place Order' }}
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ================= RIGHT: ORDER SUMMARY ================= -->
+    <aside class="checkout-summary">
+      <h3>Order Summary</h3>
+
+      <div class="summary-loading" *ngIf="loadingCart">Loading cart...</div>
+
+      <ng-container *ngIf="!loadingCart">
+        <div class="summary-row"><span>Subtotal</span><span>₹{{ subtotal | number }}</span></div>
+        <div class="summary-row">
+          <span>Shipping</span>
+          <span *ngIf="shipping > 0">₹{{ shipping }}</span>
+          <span *ngIf="shipping === 0" class="free-label">Free</span>
+        </div>
+        <div class="summary-row"><span>Tax</span><span>₹{{ tax | number }}</span></div>
+        <div class="summary-row discount-row" *ngIf="discount > 0">
+  <span>Discount ({{ appliedCoupon?.couponCode }})</span>
+  <span>−₹{{ discount | number }}</span>
+</div>
+
+        <div class="summary-divider"></div>
+
+        <div class="summary-row total"><span>Total</span><span>₹{{ total | number }}</span></div>
+      </ng-container>
+    </aside>
+  </div>
+</main>

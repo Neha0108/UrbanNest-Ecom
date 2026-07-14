@@ -1,0 +1,88 @@
+<nav class="navbar navbar-expand-lg urban-navbar fixed-top">
+  <div class="container-fluid">
+
+    <!-- Brand : Logo + Name -->
+    <a class="navbar-brand d-flex align-items-center" routerLink="/consumer/home">
+      <img src="assets/images/brand.png" alt="Urban Nest Logo" class="brand-logo">
+      <!-- <span class="brand-text">Urban Nest</span> -->
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#consumerNavbar">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Collapsible -->
+    <div class="collapse navbar-collapse" id="consumerNavbar">
+
+      <!-- Nav Links -->
+      <ul class="navbar-nav mx-auto">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/consumerNavbar/home" routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }">
+            Home
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/consumerNavbar/userdashboard" routerLinkActive="active">
+            Products
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/consumerNavbar/wishlist" routerLinkActive="active">
+            Wishlist
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/consumerNavbar/cart" routerLinkActive="active">
+            Cart
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/consumerNavbar/orders" routerLinkActive="active">
+            Orders
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/consumerNavbar/offers" routerLinkActive="active">
+            Offers
+          </a>
+      </ul>
+
+      <div class="navbar-right">
+
+        <!-- (later search / icons can come here) -->
+
+        <div class="profile-wrapper" #dropdownRef (click)="toggleDropdown()">
+          <div class="profile-header">
+            <div class="profile-avatar">
+              {{ userName[0] }}
+            </div>
+            <span class="username">{{ userName }}</span>
+            <span class="arrow">▼</span>
+          </div>
+
+          <div class="profile-dropdown" *ngIf="showDropdown" (click)="$event.stopPropagation()">
+            <a routerLink="/consumerNavbar/profile">My Profile</a>
+            <a routerLink="/consumerNavbar/change-password" (click)="$event.stopPropagation()">Change Password</a>
+            <button (click)="logout(); $event.stopPropagation()">⏻ Logout</button>
+          </div>
+        </div>
+
+        <!-- Inside your navbar, next to other icons -->
+        <div class="notification-wrapper">
+    <app-notification-panel role="Consumer"></app-notification-panel>
+  </div>
+
+      </div>
+
+    </div>
+  </div>
+</nav>
+<section class="main-content">
+<app-chatbot></app-chatbot>
+  <router-outlet></router-outlet>
+</section>

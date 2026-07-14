@@ -1,0 +1,95 @@
+<!-- ================= HERO ================= -->
+<section class="welcome-hero">
+
+  <div class="hero-inner">
+
+    <!-- LEFT CONTENT -->
+    <div class="hero-text">
+
+      <div class="hero-badge">
+        Welcome Back 👋
+      </div>
+
+      <h1>
+        Find Your Next <br>
+        Favorite Product
+      </h1>
+
+      <p>
+        Explore premium collections, discover trending products,
+        and shop from trusted retailers across fashion, beauty,
+        electronics, home decor and more.
+      </p>
+
+      <div class="cta-buttons">
+
+        <button
+          class="primary-btn"
+          routerLink="/consumerNavbar/userdashboard">
+
+          Browse Products
+
+        </button>
+
+        <button
+          class="outline-btn"
+          (click)="scrollToCategories()">
+
+          Shop Categories
+
+        </button>
+
+      </div>
+
+    </div>
+
+    <!-- RIGHT VISUAL -->
+    <div class="hero-image">
+
+      <img
+        src="assets/images/hero.png"
+        alt="Hero">
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- ================= STATS ================= -->
+<section class="stats-strip">
+
+  <div class="stat-card">
+    <h3>10K+</h3>
+    <span>Products</span>
+  </div>
+
+  <div class="stat-card">
+    <h3>500+</h3>
+    <span>Retailers</span>
+  </div>
+
+  <div class="stat-card">
+    <h3>50K+</h3>
+    <span>Customers</span>
+  </div>
+
+  <div class="stat-card">
+    <h3>24/7</h3>
+    <span>Support</span>
+  </div>
+
+</section>
+
+<app-suggested-products></app-suggested-products>
+
+<!-- ================= CATEGORIES ================= -->
+<section
+  id="categories"
+  class="categories-section">
+
+  <app-category></app-category>
+
+</section>
+
+<app-shop-by-price></app-shop-by-price>

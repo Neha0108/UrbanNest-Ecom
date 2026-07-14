@@ -1,0 +1,593 @@
+/* ==========================================================================
+   Addresses — Urban Nest Design System
+   ========================================================================== */
+
+:host {
+  display: block;
+
+  --bg-primary: #0f1115;
+  --bg-secondary: #171a20;
+  --bg-card: #1d2128;
+  --accent: #c9a55c;
+  --accent-rgb: 201, 165, 92;
+  --text-primary: #ffffff;
+  --text-secondary: #b9bdc6;
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --success: #4caf50;
+  --success-rgb: 76, 175, 80;
+  --danger: #ff5a5f;
+  --danger-rgb: 255, 90, 95;
+  --radius: 14px;
+}
+
+.addresses-page {
+  min-height: 100vh;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Inter', 'SF Pro Display', 'Manrope', sans-serif;
+  padding: 88px 24px 80px;
+}
+
+.addresses-shell {
+  max-width: 780px;
+  margin: 0 auto;
+}
+
+/* ---------------------------------------------------------------------
+   HEADER + QUICK LINKS
+   --------------------------------------------------------------------- */
+
+.addresses-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.eyebrow {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 8px;
+}
+
+.addresses-header h1 {
+  font-size: 30px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.quick-links {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+
+.quick-link {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 999px;
+  padding: 9px 18px;
+  text-decoration: none;
+  transition: color 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.quick-link:hover {
+  color: var(--text-primary);
+  border-color: rgba(var(--accent-rgb), 0.35);
+}
+
+.quick-link.is-active {
+  color: #14161a;
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+/* ---------------------------------------------------------------------
+   BANNERS
+   --------------------------------------------------------------------- */
+
+.banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 18px;
+  border-radius: var(--radius);
+  font-size: 13.5px;
+  overflow: hidden;
+}
+
+.banner svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  stroke-width: 2;
+  fill: none;
+}
+
+.banner-success {
+  background: rgba(var(--success-rgb), 0.1);
+  border: 1px solid rgba(var(--success-rgb), 0.25);
+  color: var(--success);
+}
+
+.banner-error {
+  background: rgba(var(--danger-rgb), 0.1);
+  border: 1px solid rgba(var(--danger-rgb), 0.25);
+  color: var(--danger);
+}
+
+/* ---------------------------------------------------------------------
+   ADDRESS LIST / CARDS
+   --------------------------------------------------------------------- */
+
+.address-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.address-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius);
+  padding: 22px 24px;
+  transition: border-color 200ms ease;
+}
+
+.address-card:hover {
+  border-color: rgba(var(--accent-rgb), 0.25);
+}
+
+.address-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.address-card-top h3 {
+  font-size: 15.5px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.badge-default {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.12);
+  border: 1px solid rgba(var(--accent-rgb), 0.25);
+  border-radius: 999px;
+  padding: 4px 10px;
+}
+
+.address-line {
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  margin: 0 0 4px;
+  line-height: 1.55;
+}
+
+.address-phone {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin: 6px 0 0;
+}
+
+.address-actions {
+  margin-top: 16px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* ---------------------------------------------------------------------
+   BUTTONS
+   --------------------------------------------------------------------- */
+
+.btn {
+  appearance: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1),
+    background 180ms ease, border-color 180ms ease, opacity 180ms ease;
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #14161a;
+  font-size: 14px;
+  padding: 12px 24px;
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(var(--accent-rgb), 0.28);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-subtle);
+  font-size: 14px;
+  padding: 12px 24px;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  border-color: rgba(var(--accent-rgb), 0.5);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--danger);
+  border: 1px solid transparent;
+  font-size: 13px;
+  padding: 8px 14px;
+}
+
+.btn-ghost:hover:not(:disabled) {
+  background: rgba(var(--danger-rgb), 0.1);
+}
+
+.btn-sm {
+  font-size: 12.5px;
+  padding: 8px 16px;
+}
+
+/* ---------------------------------------------------------------------
+   STATE PANEL (empty)
+   --------------------------------------------------------------------- */
+
+.state-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius);
+  padding: 56px 32px;
+  text-align: center;
+}
+
+.state-panel h2 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 8px;
+}
+
+.state-panel p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin: 0 0 20px;
+}
+
+.state-icon {
+  width: 40px;
+  height: 40px;
+  margin: 0 auto 18px;
+  stroke: var(--text-secondary);
+  stroke-width: 1.6;
+  fill: none;
+}
+
+/* ---------------------------------------------------------------------
+   SKELETON LOADING
+   --------------------------------------------------------------------- */
+
+.address-card.skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.skeleton-line {
+  height: 12px;
+  border-radius: 6px;
+  background: linear-gradient(
+    90deg,
+    var(--bg-secondary) 25%,
+    #23262e 37%,
+    var(--bg-secondary) 63%
+  );
+  background-size: 400% 100%;
+  animation: skeleton-shimmer 1.4s ease infinite;
+}
+
+.skeleton-line.w-30 { width: 30%; }
+.skeleton-line.w-50 { width: 50%; }
+.skeleton-line.w-70 { width: 70%; }
+
+@keyframes skeleton-shimmer {
+  0% { background-position: 100% 50%; }
+  100% { background-position: 0 50%; }
+}
+
+/* ---------------------------------------------------------------------
+   SLIDE-OVER PANEL
+   --------------------------------------------------------------------- */
+
+.track-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(2px);
+  z-index: 40;
+}
+
+.track-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  max-width: 440px;
+  background: var(--bg-card);
+  border-left: 1px solid var(--border-subtle);
+  z-index: 41;
+  padding: 32px 28px 28px;
+  overflow-y: auto;
+  box-shadow: -30px 0 80px rgba(0, 0, 0, 0.4);
+}
+
+.track-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+}
+
+.track-panel-header h2 {
+  font-size: 19px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.icon-btn {
+  appearance: none;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background 180ms ease;
+}
+
+.icon-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.icon-btn svg {
+  width: 18px;
+  height: 18px;
+  stroke: var(--text-secondary);
+  stroke-width: 2;
+  fill: none;
+}
+
+.icon-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ---------------------------------------------------------------------
+   LOCATE BUTTON
+   --------------------------------------------------------------------- */
+
+.location-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  appearance: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.1);
+  border: 1px dashed rgba(var(--accent-rgb), 0.35);
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 8px;
+  transition: background 180ms ease;
+}
+
+.location-btn:hover:not(:disabled) {
+  background: rgba(var(--accent-rgb), 0.16);
+}
+
+.location-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.location-btn svg {
+  width: 16px;
+  height: 16px;
+  stroke: var(--accent);
+  stroke-width: 1.8;
+  fill: none;
+}
+
+.location-error {
+  font-size: 12px;
+  color: var(--danger);
+  margin: 0 0 18px;
+}
+
+/* ---------------------------------------------------------------------
+   FORM
+   --------------------------------------------------------------------- */
+
+.address-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.field-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.field label {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.field input,
+.field textarea {
+  appearance: none;
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--text-primary);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  padding: 12px 14px;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+  resize: none;
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+  color: rgba(185, 189, 198, 0.5);
+}
+
+.field input:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.16);
+}
+
+.field input.is-invalid,
+.field textarea.is-invalid {
+  border-color: var(--danger);
+}
+
+.error-text {
+  font-size: 12px;
+  color: var(--danger);
+}
+
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.checkbox-row input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent);
+}
+
+.form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.form-actions .btn {
+  flex: 1;
+}
+
+/* ---------------------------------------------------------------------
+   RESPONSIVE
+   --------------------------------------------------------------------- */
+
+@media (max-width: 640px) {
+  .addresses-page {
+    padding: 64px 16px 56px;
+  }
+
+  .addresses-header h1 {
+    font-size: 24px;
+  }
+
+  .addresses-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .addresses-header .btn {
+    width: 100%;
+  }
+
+  .address-card {
+    padding: 18px 18px;
+  }
+
+  .field-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .track-panel {
+    max-width: 100%;
+    padding: 24px 20px 20px;
+  }
+}
+
+/* ---------------------------------------------------------------------
+   REDUCED MOTION
+   --------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .address-card,
+  .btn,
+  .quick-link,
+  .field input,
+  .field textarea {
+    transition: none;
+  }
+
+  .skeleton-line {
+    animation: none;
+  }
+}

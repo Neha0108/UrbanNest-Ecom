@@ -1,0 +1,132 @@
+<section class="suggested-page">
+
+    <!-- HEADER -->
+    <div class="suggested-header">
+        <h1>Suggested For You</h1>
+        <p>Curated based on your activity</p>
+    </div>
+
+    <!-- RECENTLY VIEWED -->
+    <div *ngIf="recentlyViewed.length" class="section">
+        <h2>Recently Viewed</h2>
+
+        <div class="product-row">
+            <div *ngFor="let product of recentlyViewed" class="product-card" (click)="goToProduct(product)">
+
+                <!-- IMAGE CAROUSEL -->
+                <div *ngIf="product.imagepath?.length" class="img-wrap">
+
+                    <div id="carousel{{product.productId}}" class="carousel slide" data-bs-ride="carousel">
+
+                        <!-- INDICATORS -->
+                        <div class="carousel-indicators">
+                            <button *ngFor="let img of product.imagepath; let i = index" type="button"
+                                [attr.data-bs-target]="'#carousel' + product.productId" [attr.data-bs-slide-to]="i"
+                                [class.active]="i === 0">
+                            </button>
+                        </div>
+
+                        <!-- IMAGES -->
+                        <div class="carousel-inner">
+                            <div *ngFor="let img of product.imagepath; let i = index" class="carousel-item"
+                                [class.active]="i === 0">
+
+                                <img [src]="'http://localhost:5146' + img" class="d-block w-100 product-img" />
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- TEXT -->
+                <h3>{{ product.productName }}</h3>
+                <p>{{ product.productPrice | currency:'INR' }}</p>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- RECOMMENDED -->
+    <div *ngIf="recommended.length" class="section">
+        <h2>Because you viewed {{ lastCategory }}</h2>
+
+        <div class="product-row">
+            <div *ngFor="let product of recommended" class="product-card" (click)="goToProduct(product)">
+
+                <!-- IMAGE CAROUSEL -->
+                <div *ngIf="product.imagepath?.length" class="img-wrap">
+
+                    <div id="carousel{{product.productId}}" class="carousel slide" data-bs-ride="carousel">
+
+                        <!-- INDICATORS -->
+                        <div class="carousel-indicators">
+                            <button *ngFor="let img of product.imagepath; let i = index" type="button"
+                                [attr.data-bs-target]="'#carousel' + product.productId" [attr.data-bs-slide-to]="i"
+                                [class.active]="i === 0">
+                            </button>
+                        </div>
+
+                        <!-- IMAGES -->
+                        <div class="carousel-inner">
+                            <div *ngFor="let img of product.imagepath; let i = index" class="carousel-item"
+                                [class.active]="i === 0">
+
+                                <img [src]="'http://localhost:5146' + img" class="d-block w-100 product-img" />
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>{{ product.productName }}</h3>
+                <p>{{ product.productPrice | currency:'INR' }}</p>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- TRENDING -->
+    <div class="section">
+        <h2>Trending Now</h2>
+
+        <div class="product-row">
+            <div *ngFor="let product of trending" class="product-card" (click)="goToProduct(product)">
+
+                <!-- IMAGE CAROUSEL -->
+                <div *ngIf="product.imagepath?.length" class="img-wrap">
+
+                    <div id="carousel{{product.productId}}" class="carousel slide" data-bs-ride="carousel">
+
+                        <!-- INDICATORS -->
+                        <div class="carousel-indicators">
+                            <button *ngFor="let img of product.imagepath; let i = index" type="button"
+                                [attr.data-bs-target]="'#carousel' + product.productId" [attr.data-bs-slide-to]="i"
+                                [class.active]="i === 0">
+                            </button>
+                        </div>
+
+                        <!-- IMAGES -->
+                        <div class="carousel-inner">
+                            <div *ngFor="let img of product.imagepath; let i = index" class="carousel-item"
+                                [class.active]="i === 0">
+
+                                <img [src]="'http://localhost:5146' + img" class="d-block w-100 product-img" />
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- TEXT -->
+                <h3>{{ product.productName }}</h3>
+                <p>{{ product.productPrice | currency:'INR' }}</p>
+
+            </div>
+        </div>
+    </div>
+
+</section>

@@ -1,0 +1,266 @@
+<main class="pd-page">
+
+  <!-- Loading State -->
+  <div class="pd-loading" *ngIf="loading">
+    <div class="pd-skeleton-gallery">
+      <div class="skeleton-main"></div>
+      <div class="skeleton-thumbs">
+        <div class="skeleton-thumb" *ngFor="let s of [1,2,3,4]"></div>
+      </div>
+    </div>
+    <div class="pd-skeleton-info">
+      <div class="skeleton-line short"></div>
+      <div class="skeleton-line long"></div>
+      <div class="skeleton-line medium"></div>
+    </div>
+  </div>
+
+  <!-- Not Found -->
+  <div class="pd-not-found" *ngIf="!loading && notFound">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+      <path d="M3 3h18v18H3V3zM8 12h8" />
+    </svg>
+    <h3>Product not found</h3>
+    <p>This product may have been removed or is no longer available.</p>
+    <a routerLink="/products" class="btn-primary">Back to Products</a>
+  </div>
+
+  <!-- Product Content -->
+  <ng-container *ngIf="!loading && !notFound && product as p">
+
+    <nav class="breadcrumb">
+      <a routerLink="/">Home</a>
+      <span>/</span>
+      <a routerLink="/products" [queryParams]="{ category: p.categoryName }">{{ p.categoryName }}</a>
+      <span>/</span>
+      <span>{{ p.productName }}</span>
+    </nav>
+
+    <section class="pd-main">
+
+      <!-- ================= GALLERY ================= -->
+      <div class="pd-gallery">
+        <div class="pd-main-image">
+          <img *ngIf="p.imagepath && p.imagepath.length" [src]="'http://localhost:5146' + p.imagepath[activeImageIndex]"
+            [alt]="p.productName" loading="lazy">
+          <span class="stock-badge out" *ngIf="p.stock === 0">Out of Stock</span>
+        </div>
+
+        <div class="pd-thumbs" *ngIf="p.imagepath && p.imagepath.length > 1">
+          <button class="pd-thumb" *ngFor="let img of p.imagepath; let i = index"
+            [class.active]="i === activeImageIndex" (click)="setActiveImage(i)">
+            <img [src]="'http://localhost:5146' + img" [alt]="p.productName + ' thumbnail'" loading="lazy">
+          </button>
+        </div>
+      </div>
+
+      <!-- ================= PURCHASE PANEL ================= -->
+      <div class="pd-info">
+        <p class="pd-category">{{ p.categoryName }} <span *ngIf="p.subCategoryName">/ {{ p.subCategoryName }}</span></p>
+        <h1 class="pd-title">{{ p.productName }}</h1>
+
+        <div class="rating-summary-block" *ngIf="ratingSummary && ratingSummary.totalReviews > 0">
+          <div class="rating-summary-left">
+            <div class="rating-big">{{ ratingSummary.averageRating }} <span class="star-icon">★</span></div>
+            <div class="rating-sub">{{ ratingSummary.totalReviews }} Review{{ ratingSummary.totalReviews > 1 ? 's' : ''
+              }}</div>
+            <div class="rating-sub recommend">{{ ratingSummary.recommendPercent }}% Recommend</div>
+          </div>
+
+          <div class="rating-summary-right">
+            <div class="rating-bar-row" *ngFor="let b of ratingSummary.breakdown">
+              <span class="bar-star">{{ b.star }}★</span>
+              <div class="bar-track">
+                <div class="bar-fill" [style.width.%]="b.percent"></div>
+              </div>
+              <span class="bar-percent">{{ b.percent }}%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="pd-price-row">
+          <span class="pd-price">₹{{ p.productPrice | number }}</span>
+        </div>
+
+        <p class="pd-stock" [class.low]="p.stock > 0 && p.stock < 10" [class.out]="p.stock === 0">
+          <ng-container *ngIf="p.stock === 0">Out of Stock</ng-container>
+          <ng-container *ngIf="p.stock > 0 && p.stock < 10">Only {{ p.stock }} left in stock</ng-container>
+          <ng-container *ngIf="p.stock >= 10">In Stock</ng-container>
+        </p>
+
+        <!-- Quantity -->
+        <div class="pd-quantity" *ngIf="p.stock > 0">
+          <span>Quantity</span>
+          <div class="qty-control">
+            <button (click)="decreaseQty()" [disabled]="quantity <= 1" aria-label="Decrease quantity">−</button>
+            <span>{{ quantity }}</span>
+            <button (click)="increaseQty()" [disabled]="quantity >= p.stock" aria-label="Increase quantity">+</button>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="pd-actions">
+          <button class="btn-add-cart" [class.added]="addedToCart"
+            [disabled]="p.stock === 0 || !isLoggedIn || isProductInCart(p.productId)" (click)="addToCart()">
+            {{ isProductInCart(p.productId) ? 'Already in Cart' : (isLoggedIn ? (addedToCart ? 'Added to Cart ✓' : 'Add
+            to Cart') : 'Login to Add') }}
+          </button>
+
+          <button class="btn-buy-now" [disabled]="p.stock === 0" (click)="buyNow()">
+            Buy Now
+          </button>
+
+          <button class="btn-wishlist-icon" [class.active]="addedToWishlist || isProductInWishlist(p.productId)"
+            [disabled]="!isLoggedIn || isProductInWishlist(p.productId)" (click)="addToWishlist()"
+            aria-label="Add to wishlist">
+            <svg width="20" height="20" viewBox="0 0 24 24" [attr.fill]="addedToWishlist ? 'currentColor' : 'none'"
+              stroke="currentColor" stroke-width="1.6">
+              <path
+                d="M12 21s-7.5-4.6-10-9.2C0.3 8 2 4 6 4c2.2 0 3.7 1.2 6 3.6C14.3 5.2 15.8 4 18 4c4 0 5.7 4 4 7.8-2.5 4.6-10 9.2-10 9.2z" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Delivery Check -->
+        <div class="pd-delivery">
+          <h4>Check Delivery</h4>
+          <div class="delivery-input-row">
+            <input type="text" maxlength="6" placeholder="Enter pincode" [(ngModel)]="pincode"
+              [ngModelOptions]="{standalone: true}">
+            <button (click)="checkDelivery()">Check</button>
+          </div>
+          <p class="delivery-message" *ngIf="deliveryChecked">{{ deliveryMessage }}</p>
+          <p class="delivery-eta" *ngIf="p.expectedDelivery">
+            Expected delivery by {{ p.expectedDelivery | date:'mediumDate' }}
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= TABS ================= -->
+    <section class="pd-tabs-section">
+      <div class="pd-tabs">
+        <button class="tab-btn" [class.active]="activeTab === 'description'"
+          (click)="setTab('description')">Description</button>
+        <button class="tab-btn" [class.active]="activeTab === 'specifications'"
+          (click)="setTab('specifications')">Specifications</button>
+        <button class="tab-btn" [class.active]="activeTab === 'reviews'" (click)="setTab('reviews')">Reviews</button>
+      </div>
+
+      <div class="pd-tab-content">
+        <div *ngIf="activeTab === 'description'" class="tab-panel">
+          <p>{{ p.productDescription }}</p>
+        </div>
+
+        <div *ngIf="activeTab === 'specifications'" class="tab-panel">
+          <table class="spec-table">
+            <tbody>
+              <tr>
+                <td>Category</td>
+                <td>{{ p.categoryName }}</td>
+              </tr>
+              <tr>
+                <td>Sub Category</td>
+                <td>{{ p.subCategoryName || '—' }}</td>
+              </tr>
+              <tr>
+                <td>Stock Available</td>
+                <td>
+                  <p class="pd-stock" [class.low]="p.stock > 0 && p.stock < 10" [class.out]="p.stock === 0">
+                    <ng-container *ngIf="p.stock === 0">Out of Stock</ng-container>
+                    <ng-container *ngIf="p.stock > 0 && p.stock < 10">Only {{ p.stock }} left in stock</ng-container>
+                    <ng-container *ngIf="p.stock >= 10">In Stock</ng-container>
+                  </p>
+                </td>
+              </tr>
+              <tr>
+                <td>Product ID</td>
+                <td>{{ p.productId }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div *ngIf="activeTab === 'reviews'" class="tab-panel">
+
+          <!-- Write a review -->
+          <div class="write-review-box">
+            <h4>Write a Review</h4>
+
+            <div class="star-input">
+              <span *ngFor="let i of [1,2,3,4,5]" class="star" [class.filled]="i <= (hoverRating || newRating)"
+                (mouseenter)="setHoverRating(i)" (mouseleave)="clearHoverRating()" (click)="setRating(i)">★</span>
+            </div>
+
+            <textarea class="review-textarea" rows="3" placeholder="Share your experience with this product..."
+              [(ngModel)]="newComment" [ngModelOptions]="{standalone: true}"></textarea>
+
+            <div class="review-submit-row">
+              <button class="btn-submit-review" (click)="submitReview()" [disabled]="submittingReview">
+                {{ submittingReview ? 'Submitting...' : 'Submit Review' }}
+              </button>
+              <small class="review-error" *ngIf="reviewError">{{ reviewError }}</small>
+              <small class="review-success" *ngIf="reviewSuccess">{{ reviewSuccess }}</small>
+            </div>
+          </div>
+
+          <!-- Loading state -->
+          <div class="reviews-loading" *ngIf="reviewsLoading">
+            <p>Loading reviews...</p>
+          </div>
+
+          <!-- Existing reviews -->
+          <div class="reviews-empty" *ngIf="!reviewsLoading && reviews.length === 0">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+              <path d="M12 2l2.4 6.6L21 10l-5 4.4L17.4 21 12 17.3 6.6 21 8 14.4 3 10l6.6-1.4L12 2z" />
+            </svg>
+            <p>No reviews yet</p>
+            <span>Be the first to share your thoughts on this product.</span>
+          </div>
+
+          <div class="review-list" *ngIf="!reviewsLoading && reviews.length > 0">
+            <div class="review-item" *ngFor="let r of reviews">
+              <div class="review-item-header">
+                <span class="review-user-name">{{ r.userName }}</span>
+                <span class="review-verified" *ngIf="r.isVerifiedPurchase">✔ Verified Purchase</span>
+                <span class="review-item-date">{{ r.createdAt | date:'mediumDate' }}</span>
+              </div>
+              <div class="pd-stars">
+                <span *ngFor="let filled of starsArray(r.rating)" [class.filled]="filled">★</span>
+              </div>
+              <p class="review-item-comment">{{ r.comment }}</p>
+
+              <button class="helpful-btn" [class.active]="r.markedHelpfulByMe" (click)="toggleHelpful(r)">
+                👍 Helpful ({{ r.helpfulCount }})
+              </button>
+
+              <div class="seller-reply" *ngIf="r.replyMessage">
+                <div class="seller-reply-header">
+                  <span class="seller-badge">Seller</span>
+                  <span class="seller-reply-date">{{ r.replyDate | date:'mediumDate' }}</span>
+                </div>
+                <p class="seller-reply-text">{{ r.replyMessage }}</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= RELATED PRODUCTS ================= -->
+    <section class="pd-related" *ngIf="relatedProducts.length">
+      <h2>You May Also Like</h2>
+      <div class="related-row">
+        <div class="related-card" *ngFor="let rp of relatedProducts; trackBy: trackById" (click)="goToProduct(rp)">
+          <div class="related-img">
+            <img [src]="'http://localhost:5146' + (rp.imagepath?.[0] || '')" [alt]="rp.productName">
+          </div>
+          <p class="related-name">{{ rp.productName }}</p>
+          <p class="related-price">₹{{ rp.productPrice | number }}</p>
+        </div>
+      </div>
+    </section>
+
+  </ng-container>
+</main>

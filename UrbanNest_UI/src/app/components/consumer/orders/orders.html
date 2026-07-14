@@ -1,0 +1,188 @@
+<main class="orders-page">
+
+  <div class="orders-shell">
+
+    <!-- ============ HEADER ============ -->
+    <header class="orders-header">
+      <div>
+        <p class="eyebrow">Your Account</p>
+        <h1>Orders</h1>
+      </div>
+      <span class="order-count" *ngIf="!loading()">
+        {{ orders().length }} {{ orders().length === 1 ? 'order' : 'orders' }}
+      </span>
+    </header>
+
+    <!-- ============ FILTER PILLS ============ -->
+    <nav class="filter-row" aria-label="Filter orders by status">
+      <button *ngFor="let f of filters" type="button" class="filter-pill" [class.is-active]="activeFilter() === f.key"
+        (click)="setFilter(f.key)">
+        {{ f.label }}
+      </button>
+    </nav>
+
+    <!-- ============ LOADING SKELETON ============ -->
+    <div class="order-list" *ngIf="loading()">
+      <div class="order-card skeleton" *ngFor="let i of [1,2,3]">
+        <div class="skeleton-line w-30"></div>
+        <div class="skeleton-line w-60"></div>
+        <div class="skeleton-line w-40"></div>
+      </div>
+    </div>
+
+    <!-- ============ ERROR STATE ============ -->
+    <div class="state-panel" *ngIf="!loading() && errorMessage()">
+      <p>{{ errorMessage() }}</p>
+      <button type="button" class="btn btn-secondary" (click)="loadOrders()">
+        Try Again
+      </button>
+    </div>
+
+    <!-- ============ EMPTY STATE ============ -->
+    <div class="state-panel" *ngIf="!loading() && !errorMessage() && !hasOrders()">
+      <svg viewBox="0 0 24 24" class="state-icon" aria-hidden="true">
+        <path d="M3 7h18l-1.5 12.5a2 2 0 0 1-2 1.5H6.5a2 2 0 0 1-2-1.5L3 7z" />
+        <path d="M8 7V5a4 4 0 0 1 8 0v2" />
+      </svg>
+      <h2>No orders yet</h2>
+      <p>When you place an order, it will show up here.</p>
+      <button type="button" class="btn btn-primary" (click)="goToProducts()">
+        Start Shopping
+      </button>
+    </div>
+
+    <!-- ============ FILTER EMPTY STATE ============ -->
+    <div class="state-panel" *ngIf="!loading() && !errorMessage() && hasOrders() && !hasFilteredOrders()">
+      <h2>No orders in this category</h2>
+      <p>Try a different filter to see the rest of your orders.</p>
+    </div>
+
+    <!-- ============ ORDER LIST ============ -->
+    <div class="order-list" *ngIf="!loading() && hasFilteredOrders()" [@listStagger]>
+
+      <article class="order-card" *ngFor="let order of filteredOrders()">
+
+        <div class="order-card-header">
+          <div class="order-id-block">
+            <p class="order-number">Order #{{ order.orderId }}</p>
+            <p class="order-date">{{ order.orderDate | date: 'mediumDate' }}</p>
+          </div>
+
+          <span class="status-badge" [ngClass]="getStatusClass(order.status)">
+            {{ order.status }}
+          </span>
+        </div>
+
+        <div class="delivery-info-strip" *ngIf="hasDeliveryInfo(order)">
+          <span class="delivery-icon">🛵</span>
+          <span class="delivery-text">
+            {{ order.deliveryPersonName }} is delivering your order
+          </span>
+          <a class="delivery-call" [href]="'tel:' + order.deliveryPersonPhone">
+            📞 {{ order.deliveryPersonPhone }}
+          </a>
+        </div>
+
+        <ul class="item-list">
+          <li class="item-row" *ngFor="let item of order.items">
+            <span class="item-name">{{ item.productName }}</span>
+            <span class="item-meta">
+              &times;{{ item.quantity }}
+              <span class="item-price">&#8377;{{ item.price * item.quantity | number:'1.0-0' }}</span>
+            </span>
+          </li>
+        </ul>
+
+        <div class="order-card-footer">
+          <div class="order-total-block">
+            <span class="item-count">{{ getItemCountLabel(order.items) }}</span>
+            <span class="order-total">&#8377;{{ getOrderTotal(order.items) | number:'1.0-0' }}</span>
+          </div>
+
+          <div class="order-actions">
+            <button type="button" class="btn btn-secondary btn-sm" (click)="trackOrder(order)">
+              Track Order
+            </button>
+
+            <button *ngIf="isCancellable(order)" type="button" class="btn btn-ghost btn-sm"
+              [disabled]="cancellingId() === order.orderId" (click)="cancelOrder(order, $event)">
+              {{ cancellingId() === order.orderId ? 'Cancelling\u2026' : 'Cancel' }}
+            </button>
+          </div>
+        </div>
+
+      </article>
+
+    </div>
+
+  </div>
+
+  <!-- ============ TRACK ORDER SLIDE-OVER ============ -->
+  <ng-container *ngIf="selectedOrder() as order">
+
+    <div class="track-overlay" [@overlayFade] (click)="closeTrack()"></div>
+
+    <aside class="track-panel" [@panelSlide] role="dialog" aria-modal="true" aria-labelledby="track-heading">
+      <div class="track-panel-header">
+        <div>
+          <p class="eyebrow">Order #{{ order.orderId }}</p>
+          <h2 id="track-heading">Track your order</h2>
+        </div>
+
+        <button type="button" class="icon-btn" (click)="closeTrack()" aria-label="Close tracking panel">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6 6l12 12M18 6L6 18" />
+          </svg>
+        </button>
+      </div>
+
+      <ol class="timeline" *ngIf="order.status !== 'Cancelled'; else cancelledState">
+        <li class="timeline-step" *ngFor="let step of timelineSteps; let i = index; let last = last"
+          [class.is-done]="isStepDone(i)">
+          <div class="step-indicator" aria-hidden="true">
+            <span class="step-dot"></span>
+            <span class="step-line" *ngIf="!last"></span>
+          </div>
+          <p class="step-label">{{ step.label }}</p>
+        </li>
+      </ol>
+      <div class="track-delivery-card" *ngIf="hasDeliveryInfo(order)">
+  <p class="track-delivery-heading">Delivery Partner</p>
+  <div class="track-delivery-row">
+    <div class="track-delivery-avatar">{{ order.deliveryPersonName?.charAt(0) }}</div>
+    <div class="track-delivery-details">
+      <p class="track-delivery-name">{{ order.deliveryPersonName }}</p>
+      <a class="track-delivery-phone" [href]="'tel:' + order.deliveryPersonPhone">
+        {{ order.deliveryPersonPhone }}
+      </a>
+    </div>
+    <a class="track-call-btn" [href]="'tel:' + order.deliveryPersonPhone" aria-label="Call delivery partner">
+      📞
+    </a>
+  </div>
+</div>
+
+      <ng-template #cancelledState>
+        <div class="cancelled-panel">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="9" />
+            <path d="M9 9l6 6M15 9l-6 6" />
+          </svg>
+          <p>This order was cancelled.</p>
+        </div>
+      </ng-template>
+
+      <div class="track-items">
+        <p class="track-items-heading">Items in this order</p>
+        <ul>
+          <li *ngFor="let item of order.items">
+            <span>{{ item.productName }} &times; {{ item.quantity }}</span>
+            <span>&#8377;{{ item.price * item.quantity | number:'1.0-0' }}</span>
+          </li>
+        </ul>
+      </div>
+    </aside>
+
+  </ng-container>
+
+</main>

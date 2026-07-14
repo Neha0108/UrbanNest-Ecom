@@ -1,0 +1,72 @@
+<main class="wishlist-page">
+
+  <header class="wishlist-header">
+    <nav class="breadcrumb">
+      <a routerLink="/consumerNavbar/welcome">Home</a>
+      <span>/</span>
+      <span>Wishlist</span>
+    </nav>
+    <h1>Your Wishlist</h1>
+    <p *ngIf="!loading">{{ wishlist.length }} item{{ wishlist.length === 1 ? '' : 's' }} saved</p>
+  </header>
+
+  <!-- Loading -->
+  <div class="wishlist-loading" *ngIf="loading">
+    <div class="skeleton-item" *ngFor="let s of [1,2,3]">
+      <div class="skeleton-img"></div>
+      <div class="skeleton-text">
+        <div class="skeleton-line short"></div>
+        <div class="skeleton-line"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div class="wishlist-empty" *ngIf="!loading && wishlist.length === 0">
+    <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+      <path d="M12 21s-7.5-4.6-10-9.2C0.3 8 2 4 6 4c2.2 0 3.7 1.2 6 3.6C14.3 5.2 15.8 4 18 4c4 0 5.7 4 4 7.8-2.5 4.6-10 9.2-10 9.2z"/>
+    </svg>
+    <h3>Your wishlist is empty</h3>
+    <p>Save items you love and come back to them anytime.</p>
+    <a routerLink="/consumerNavbar/userdashboard" class="btn-primary">Explore Products</a>
+  </div>
+
+  <!-- Wishlist Grid -->
+  <div class="wishlist-grid" *ngIf="!loading && wishlist.length > 0">
+    <div class="wishlist-card" *ngFor="let item of wishlist; trackBy: trackByProductId">
+
+      <button class="remove-btn" (click)="removeFromWishlist(item.productId)" aria-label="Remove from wishlist">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+          <path d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+
+      <div class="wishlist-img-wrap" (click)="viewDetails(item.productId)">
+        <img
+          [src]="'http://localhost:5146' + (item.imagePath?.[0] || item.imagePath)"
+          [alt]="item.productName"
+          loading="lazy">
+      </div>
+
+      <div class="wishlist-info">
+        <h4 (click)="viewDetails(item.productId)">{{ item.productName }}</h4>
+        <p class="wishlist-price">₹{{ item.productPrice | number }}</p>
+
+        <div class="wishlist-actions">
+          <button
+            class="btn-add-cart"
+            [class.added]="addedToCartIds.has(item.productId)"
+            [disabled]="addingToCartId === item.productId || addedToCartIds.has(item.productId)"
+            (click)="addToCart(item.productId)">
+            {{ addedToCartIds.has(item.productId) ? 'Added ✓' : (addingToCartId === item.productId ? 'Adding...' : 'Add to Cart') }}
+          </button>
+
+          <button class="btn-buy-now" (click)="buyNow(item.productId)">
+            Buy Now
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
