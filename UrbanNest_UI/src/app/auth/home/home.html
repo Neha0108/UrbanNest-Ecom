@@ -1,0 +1,239 @@
+<!-- Scroll progress thread — the page's signature motif -->
+<div class="scroll-thread" aria-hidden="true"></div>
+
+<main class="home-page">
+
+  <!-- ================= HERO ================= -->
+  <section
+    class="hero"
+    #heroSection
+    (mousemove)="onHeroMouseMove($event)">
+
+    <div class="hero-glow" aria-hidden="true"></div>
+    <div class="hero-shape hero-shape-a" aria-hidden="true"></div>
+    <div class="hero-shape hero-shape-b" aria-hidden="true"></div>
+
+    <div class="hero-slides">
+      <div
+        class="hero-slide"
+        *ngFor="let s of slides; let i = index"
+        [class.active]="i === currentSlide"
+        [style.backgroundImage]="'url(' + s.image + ')'">
+      </div>
+    </div>
+
+    <div class="hero-scrim" aria-hidden="true"></div>
+    <div class="hero-glass" aria-hidden="true"></div>
+
+    <div class="hero-content" *ngFor="let s of slides; let i = index" [class.active]="i === currentSlide">
+      <p class="hero-eyebrow">UrbanNest — {{ s.category }}</p>
+      <h1 class="hero-title">{{ s.title }}</h1>
+      <p class="hero-subtitle">{{ s.subtitle }}</p>
+      <div class="hero-actions">
+        <button class="btn-lux btn-lux-gold magnetic" (click)="goToProducts(s.category)">
+          <span>{{ s.buttonText }}</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+        <button class="btn-lux btn-lux-ghost magnetic" (click)="scrollToCategories()">Explore Categories</button>
+      </div>
+    </div>
+
+    <div class="hero-dots" role="tablist" aria-label="Hero slides">
+      <button
+        *ngFor="let s of slides; let i = index"
+        class="hero-dot"
+        [class.active]="i === currentSlide"
+        role="tab"
+        [attr.aria-selected]="i === currentSlide"
+        [attr.aria-label]="'Show slide ' + (i + 1) + ': ' + s.title"
+        (click)="setSlide(i)">
+        <span class="hero-dot-fill"></span>
+      </button>
+    </div>
+
+    <button class="hero-scroll-indicator" (click)="scrollToCategories()" aria-label="Scroll to categories">
+      <span class="hero-scroll-line"></span>
+      <span class="hero-scroll-text">Scroll</span>
+    </button>
+  </section>
+
+  <!-- ================= CATEGORIES ================= -->
+  <!-- app-category renders its own full heading/banner already — no extra heading wrapper here, it was duplicating the title and doubling the vertical padding -->
+  <section class="child-section reveal">
+    <app-category></app-category>
+  </section>
+
+  <!-- ================= TRENDING PRODUCTS ================= -->
+   <section class="child-section reveal" *ngIf="isLoggedIn()">
+  <app-suggested-products></app-suggested-products>
+</section>
+
+  <section class="section trending-section" *ngIf="!isLoggedIn() && trendingProducts.length">
+    <div class="section-heading reveal reveal-up">
+      <p class="eyebrow">Trending Now</p>
+      <h2>What's Moving This Week</h2>
+      <span class="heading-rule" ></span>
+    </div>
+
+    <div class="product-grid"  >
+      <article
+        class="product-card reveal reveal-up"
+        *ngFor="let p of trendingProducts; let i = index; trackBy: trackByProductId"
+        [style.transitionDelay.ms]="(i % 4) * 80"
+        (click)="goToProduct(p)">
+
+        <div class="product-media">
+          <img
+            [src]="'http://localhost:5146' + (p.imagepath?.[0] || '')"
+            [alt]="p.productName"
+            loading="lazy">
+
+          <div class="product-badges">
+            <span class="badge badge-discount" *ngIf="discountBadge(p) as d">{{ d }}% OFF</span>
+            <span class="badge badge-stock" *ngIf="stockLabel(p) as sl">{{ sl }}</span>
+          </div>
+
+          <button
+            class="product-wishlist"
+            [class.active]="isWishlisted(p)"
+            (click)="toggleWishlist(p, $event)"
+            [attr.aria-label]="isWishlisted(p) ? 'Remove from wishlist' : 'Add to wishlist'">
+            <svg width="18" height="18" viewBox="0 0 24 24" [attr.fill]="isWishlisted(p) ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="1.6">
+              <path d="M12 21s-7.5-4.7-10-9.3C.6 8 2 4.5 5.4 3.6 8 2.9 10.4 4.1 12 6.4 13.6 4.1 16 2.9 18.6 3.6 22 4.5 23.4 8 22 11.7 19.5 16.3 12 21 12 21z"/>
+            </svg>
+          </button>
+
+          <button class="product-quickview" (click)="openQuickView(p, $event)">Quick View</button>
+        </div>
+
+        <div class="product-info">
+          <span class="product-retailer" *ngIf="retailerName(p) as r">{{ r }}</span>
+          <h4 class="product-name">{{ p.productName }}</h4>
+
+          <div class="product-rating" [attr.aria-label]="ratingOf(p) + ' out of 5 stars'">
+            <svg *ngFor="let star of [1,2,3,4,5]" width="12" height="12" viewBox="0 0 24 24" [attr.fill]="star <= ratingOf(p) ? '#C9A55C' : 'none'" stroke="#C9A55C" stroke-width="1.5">
+              <path d="M12 2l2.9 6.4 7 .7-5.3 4.7 1.6 6.9L12 17l-6.2 3.7 1.6-6.9L2.1 9.1l7-.7L12 2z"/>
+            </svg>
+          </div>
+
+          <div class="product-price-row">
+            <span class="product-price">₹{{ p.productPrice | number }}</span>
+            <button
+              class="product-add"
+              [class.loading]="addingToCartId === p.productId"
+              [class.added]="addedToCartId === p.productId"
+              (click)="quickAddToCart(p, $event)">
+              <span *ngIf="addingToCartId !== p.productId && addedToCartId !== p.productId">Add to Cart</span>
+              <span *ngIf="addingToCartId === p.productId" class="product-add-spinner" aria-hidden="true"></span>
+              <span *ngIf="addedToCartId === p.productId">Added ✓</span>
+            </button>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ================= OFFERS — now a slideshow, see offers.html ================= -->
+  <section class="child-section offers-teaser-section reveal">
+    <app-offers [compact]="true"></app-offers>
+  </section>
+
+  <!-- ================= SHOP BY PRICE ================= -->
+  <!-- app-shop-by-price renders its own "Shop By Price" heading already — same fix as categories -->
+  <section class="child-section reveal">
+    <app-shop-by-price></app-shop-by-price>
+  </section>
+
+  <!-- ================= WHY CHOOSE US ================= -->
+  <section class="section why-section">
+    <div class="section-heading reveal reveal-up">
+      <p class="eyebrow">The UrbanNest Standard</p>
+      <h2>Why Shop With Us</h2>
+      <span class="heading-rule" aria-hidden="true"></span>
+    </div>
+
+    <div class="why-grid">
+      <div
+        class="why-card reveal"
+        [class.reveal-left]="i % 2 === 0"
+        [class.reveal-right]="i % 2 !== 0"
+        *ngFor="let f of features; let i = index"
+        [style.transitionDelay.ms]="i * 90">
+        <span class="why-icon" [innerHTML]="f.icon"></span>
+        <h4>{{ f.title }}</h4>
+        <p>{{ f.desc }}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= STATISTICS ================= -->
+  <section class="section stats-section" #statsSection>
+    <div class="stats-bg" aria-hidden="true"></div>
+    <div class="stats-grid">
+      <div class="stat-card reveal reveal-up" *ngFor="let s of stats; let i = index" [style.transitionDelay.ms]="i * 100">
+        <span class="stat-number">{{ s.display }}</span>
+        <span class="stat-label">{{ s.label }}</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= NEWSLETTER ================= -->
+  <section class="section newsletter-section reveal reveal-up">
+    <div class="newsletter-card">
+      <p class="eyebrow">Stay In The Loop</p>
+      <h2>Join The UrbanNest Circle</h2>
+      <p class="newsletter-copy">First access to new arrivals, private sales and stories from the retailers behind them.</p>
+
+      <form class="newsletter-form" [formGroup]="newsletterForm" (ngSubmit)="subscribeNewsletter()">
+        <div class="floating-field">
+          <input
+            id="newsletter-email"
+            type="email"
+            formControlName="email"
+            placeholder=" "
+            autocomplete="email">
+          <label for="newsletter-email">Email address</label>
+        </div>
+        <button type="submit" class="btn-lux btn-lux-gold magnetic" [disabled]="newsletterForm.invalid">
+          Subscribe
+        </button>
+      </form>
+
+      <p class="newsletter-success" *ngIf="subscribed" role="status">You're on the list — welcome to UrbanNest.</p>
+      <p class="newsletter-hint" *ngIf="newsletterForm.get('email')?.touched && newsletterForm.get('email')?.invalid">
+        Enter a valid email address.
+      </p>
+    </div>
+  </section>
+
+  <app-footer></app-footer>
+
+  <!-- ================= QUICK VIEW MODAL ================= -->
+  <div class="quickview-overlay" *ngIf="quickViewProduct" (click)="closeQuickView()">
+    <div class="quickview-panel" (click)="$event.stopPropagation()">
+      <button class="quickview-close" (click)="closeQuickView()" aria-label="Close quick view">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+
+      <div class="quickview-media">
+        <img [src]="'http://localhost:5146' + (quickViewProduct.imagepath?.[0] || '')" [alt]="quickViewProduct.productName">
+      </div>
+
+      <div class="quickview-info">
+        <span class="product-retailer" *ngIf="retailerName(quickViewProduct) as r">{{ r }}</span>
+        <h3>{{ quickViewProduct.productName }}</h3>
+        <div class="product-rating" [attr.aria-label]="ratingOf(quickViewProduct) + ' out of 5 stars'">
+          <svg *ngFor="let star of [1,2,3,4,5]" width="13" height="13" viewBox="0 0 24 24" [attr.fill]="star <= ratingOf(quickViewProduct) ? '#C9A55C' : 'none'" stroke="#C9A55C" stroke-width="1.5">
+            <path d="M12 2l2.9 6.4 7 .7-5.3 4.7 1.6 6.9L12 17l-6.2 3.7 1.6-6.9L2.1 9.1l7-.7L12 2z"/>
+          </svg>
+        </div>
+        <p class="quickview-price">₹{{ quickViewProduct.productPrice | number }}</p>
+        <div class="quickview-actions">
+          <button class="btn-lux btn-lux-gold" (click)="quickAddToCart(quickViewProduct, $event)">Add to Cart</button>
+          <button class="btn-lux btn-lux-ghost" (click)="goToProduct(quickViewProduct)">View Full Details</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
