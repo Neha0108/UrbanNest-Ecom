@@ -1,0 +1,94 @@
+<div class="content-card">
+
+  <div class="card-header-premium">
+    <h3>Orders</h3>
+  </div>
+
+  <div class="orders-list">
+
+    <div *ngIf="loading" class="empty-orders">
+      Loading orders...
+    </div>
+
+    <div *ngIf="!loading && errorMessage" class="empty-orders">
+      {{ errorMessage }}
+    </div>
+
+    <div *ngIf="!loading && orders.length > 0">
+
+      <div *ngFor="let order of orders | slice:0:5" class="order-item">
+
+        <div class="order-left">
+
+          <div class="order-number">
+            #{{ order.orderId }}
+          </div>
+
+          <div class="order-customer">
+            <span *ngIf="order.items?.[0]">
+              {{ order.items[0].productName }}
+            </span>
+          </div>
+
+          <div class="order-date">
+            {{ order.orderDate | date:'short' }}
+          </div>
+
+          <div class="order-category" *ngIf="order.uniqueCategories?.length">
+            {{ order.uniqueCategories.join(', ') }}
+          </div>
+
+        </div>
+
+        <div class="order-right">
+
+          <div class="order-status" [ngClass]="getStatusClass(order.status)">
+            {{ order.status }}
+          </div>
+
+          <select
+            [value]="order.status"
+            (change)="updateStatus(order.orderId, $event)"
+            class="status-select">
+
+            <option>Pending</option>
+            <option>Confirmed</option>
+            <option>Shipped</option>
+            <option>Out for Delivery</option>
+            <option>Delivered</option>
+
+          </select>
+
+          <button class="delivery-btn" (click)="openDeliveryModal(order)">{{ order.deliveryPersonName ? '🚴 Edit Delivery Info' : '🚴 Add Delivery Info' }}</button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div *ngIf="!loading && orders.length === 0 && !errorMessage" class="empty-orders">
+      <div>📦 No orders yet</div>
+    </div>
+
+  </div>
+  <div class="delivery-modal-backdrop" *ngIf="deliveryModalOrderId" (click)="closeDeliveryModal()">
+  <div class="delivery-modal" (click)="$event.stopPropagation()">
+    <h4>Delivery Details — Order #{{ deliveryModalOrderId }}</h4>
+
+    <label>Delivery Person Name</label>
+    <input [(ngModel)]="deliveryForm.deliveryPersonName" placeholder="e.g. Ramesh Kumar" />
+
+    <label>Phone Number</label>
+    <input [(ngModel)]="deliveryForm.deliveryPersonPhone" placeholder="e.g. 9876543210" />
+
+    <div class="delivery-modal-actions">
+      <button (click)="closeDeliveryModal()" [disabled]="deliverySubmitting">Cancel</button>
+      <button class="save-btn" (click)="submitDeliveryDetails()" [disabled]="deliverySubmitting">
+        {{ deliverySubmitting ? 'Saving...' : 'Save' }}
+      </button>
+    </div>
+  </div>
+</div>
+
+</div>

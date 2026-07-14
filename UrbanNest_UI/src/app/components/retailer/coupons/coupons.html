@@ -1,0 +1,159 @@
+<section class="coupons-page">
+
+  <div class="page-header">
+    <div>
+      <p class="eyebrow">Promotions</p>
+      <h1>My Coupons</h1>
+      <span>Create and manage discount coupons for your products.</span>
+    </div>
+    <button class="btn-primary" (click)="openCreateModal()">+ Create Coupon</button>
+  </div>
+
+  <div class="coupons-toolbar">
+    <input
+      type="text"
+      class="search-input"
+      placeholder="Search by code or description..."
+      [(ngModel)]="searchTerm"
+    />
+
+    <select class="status-select" [(ngModel)]="statusFilter">
+      <option value="All">All Status</option>
+      <option value="Active">Active</option>
+      <option value="Inactive">Inactive</option>
+      <option value="Upcoming">Upcoming</option>
+      <option value="Expired">Expired</option>
+    </select>
+  </div>
+
+  <div *ngIf="loading" class="state-card">Loading coupons...</div>
+  <div *ngIf="!loading && errorMessage" class="state-card error">{{ errorMessage }}</div>
+  <div *ngIf="!loading && !errorMessage && filteredCoupons.length === 0" class="state-card">
+    No coupons found.
+  </div>
+
+  <div class="coupons-grid" *ngIf="!loading && filteredCoupons.length > 0">
+    <div class="coupon-card" *ngFor="let c of filteredCoupons">
+
+      <div class="coupon-card-top">
+        <span class="badge" [ngClass]="statusBadge(c).cls">{{ statusBadge(c).label }}</span>
+        <span class="discount-pill">{{ discountLabel(c) }}</span>
+      </div>
+
+      <div class="coupon-code-row">
+        <span class="coupon-code">{{ c.couponCode }}</span>
+        <button class="copy-btn" (click)="copyCode(c.couponCode)">
+          {{ copiedCode === c.couponCode ? 'Copied!' : 'Copy' }}
+        </button>
+      </div>
+
+      <p class="coupon-desc">{{ c.description || 'No description' }}</p>
+
+      <div class="coupon-meta">
+        <div class="meta-item">
+          <span>Min. Order</span>
+          <strong>₹{{ c.minimumOrderAmount }}</strong>
+        </div>
+        <div class="meta-item" *ngIf="c.maximumDiscount">
+          <span>Max Discount</span>
+          <strong>₹{{ c.maximumDiscount }}</strong>
+        </div>
+        <div class="meta-item">
+          <span>Expires</span>
+          <strong>{{ c.expiryDate | date:'mediumDate' }}</strong>
+        </div>
+      </div>
+
+      <div class="coupon-actions">
+        <button class="action-btn" (click)="openEditModal(c)">Edit</button>
+        <button class="action-btn" (click)="toggleStatus(c)">
+          {{ c.isActive ? 'Disable' : 'Enable' }}
+        </button>
+        <button class="action-btn danger" (click)="deleteCoupon(c)">Delete</button>
+      </div>
+
+    </div>
+  </div>
+
+</section>
+
+<!-- Create / Edit Modal -->
+<div class="modal-backdrop" *ngIf="showFormModal" (click)="closeModal()">
+  <div class="modal-panel" (click)="$event.stopPropagation()">
+
+    <div class="modal-header">
+      <h2>{{ editingCoupon ? 'Edit Coupon' : 'Create Coupon' }}</h2>
+      <button class="modal-close" (click)="closeModal()">&times;</button>
+    </div>
+
+    <div class="modal-body">
+
+      <div class="form-row" *ngIf="!editingCoupon">
+        <label>Coupon Code <span class="req">*</span></label>
+        <input type="text" [(ngModel)]="form.couponCode" placeholder="e.g. NIKE10" maxlength="30" />
+      </div>
+
+      <div class="form-row">
+        <label>Description</label>
+        <input type="text" [(ngModel)]="form.description" placeholder="Short description" />
+      </div>
+
+      <div class="form-row-split" *ngIf="!editingCoupon">
+        <div class="form-row">
+          <label>Discount Type <span class="req">*</span></label>
+          <select [(ngModel)]="form.discountType">
+            <option value="Flat">Flat (₹)</option>
+            <option value="Percentage">Percentage (%)</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label>Discount Value <span class="req">*</span></label>
+          <input type="number" [(ngModel)]="form.discountValue" min="0" />
+        </div>
+      </div>
+
+      <div class="form-row" *ngIf="editingCoupon">
+        <label>Discount Value ({{ editingCoupon.discountType }}) <span class="req">*</span></label>
+        <input type="number" [(ngModel)]="form.discountValue" min="0" />
+      </div>
+
+      <div class="form-row-split">
+        <div class="form-row">
+          <label>Minimum Order Amount</label>
+          <input type="number" [(ngModel)]="form.minimumOrderAmount" min="0" />
+        </div>
+        <div class="form-row">
+          <label>Maximum Discount (optional)</label>
+          <input type="number" [(ngModel)]="form.maximumDiscount" min="0" />
+        </div>
+      </div>
+
+      <div class="form-row-split">
+        <div class="form-row">
+          <label>Start Date <span class="req">*</span></label>
+          <input type="date" [(ngModel)]="form.startDate" />
+        </div>
+        <div class="form-row">
+          <label>Expiry Date <span class="req">*</span></label>
+          <input type="date" [(ngModel)]="form.expiryDate" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label>Usage Limit (optional)</label>
+        <input type="number" [(ngModel)]="form.usageLimit" min="1" placeholder="Unlimited if empty" />
+      </div>
+
+      <p class="form-error" *ngIf="formError">{{ formError }}</p>
+
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-secondary" (click)="closeModal()">Cancel</button>
+      <button class="btn-primary" [disabled]="saving" (click)="submitForm()">
+        {{ saving ? 'Saving...' : (editingCoupon ? 'Save Changes' : 'Create Coupon') }}
+      </button>
+    </div>
+
+  </div>
+</div>

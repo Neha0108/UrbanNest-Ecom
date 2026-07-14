@@ -1,0 +1,64 @@
+<div class="content-card">
+
+  <div class="card-header-premium">
+    <h3>Product Reviews</h3>
+  </div>
+
+  <div class="reviews-stats" *ngIf="!loading && totalReviews > 0">
+    <div class="stat-card">
+      <span>Average Rating</span>
+      <strong>{{ avgRating }} ★</strong>
+    </div>
+    <div class="stat-card">
+      <span>Total Reviews</span>
+      <strong>{{ totalReviews }}</strong>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="empty-orders">Loading reviews...</div>
+  <div *ngIf="!loading && errorMessage" class="empty-orders">{{ errorMessage }}</div>
+  <div *ngIf="!loading && !errorMessage && reviews.length === 0" class="empty-orders">
+    <div>⭐ No reviews yet</div>
+  </div>
+
+  <div class="reviews-table" *ngIf="!loading && reviews.length > 0">
+
+    <div class="review-row" *ngFor="let r of reviews">
+
+      <div class="review-left">
+        <div class="review-product">{{ r.productName }}</div>
+        <div class="review-user">by {{ r.userName }}
+          <span class="verified-badge" *ngIf="r.isVerifiedPurchase">✔ Verified</span>
+        </div>
+        <div class="review-comment">{{ r.comment }}</div>
+
+        <div class="seller-reply-existing" *ngIf="r.replyMessage">
+          <span class="seller-badge">Your Reply</span>
+          <p>{{ r.replyMessage }}</p>
+        </div>
+
+        <div class="reply-form" *ngIf="!r.replyMessage">
+          <button *ngIf="replyingTo !== r.reviewId" class="reply-toggle-btn" (click)="startReply(r.reviewId)">
+            Reply to this review
+          </button>
+
+          <div *ngIf="replyingTo === r.reviewId" class="reply-input-row">
+            <textarea rows="2" placeholder="Write a reply..." [(ngModel)]="replyText[r.reviewId]"></textarea>
+            <button class="btn-submit-review" (click)="submitReply(r.reviewId)">Send</button>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="review-right">
+        <div class="stars">
+          <span *ngFor="let filled of starsArray(r.rating)" [class.filled]="filled">★</span>
+        </div>
+        <div class="review-date">{{ r.createdAt | date:'mediumDate' }}</div>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

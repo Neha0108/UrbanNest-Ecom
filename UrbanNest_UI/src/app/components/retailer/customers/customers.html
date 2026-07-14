@@ -1,0 +1,86 @@
+<section class="customers-page">
+
+  <div class="page-header">
+    <div>
+      <p class="eyebrow">Customer Management</p>
+      <h1>My Customers</h1>
+      <span>View customers who purchased your products.</span>
+    </div>
+  </div>
+
+  <div class="customer-stats">
+
+    <div class="stat-card">
+      <span>Total Customers</span>
+      <strong>{{ totalCustomers }}</strong>
+    </div>
+
+    <div class="stat-card">
+      <span>Repeat Customers</span>
+      <strong>{{ repeatCustomers }}</strong>
+    </div>
+
+    <div class="stat-card">
+      <span>New Customers</span>
+      <strong>{{ newCustomers }}</strong>
+    </div>
+
+    <div class="stat-card">
+      <span>Total Revenue</span>
+      <strong>₹{{ totalRevenue | number:'1.0-0' }}</strong>
+    </div>
+
+  </div>
+
+  <div *ngIf="loading" class="state-card">
+    Loading customers...
+  </div>
+
+  <div *ngIf="!loading && errorMessage" class="state-card error">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="!loading && !errorMessage && customers.length === 0" class="state-card">
+    No customers found yet.
+  </div>
+
+  <div class="customers-card" *ngIf="!loading && customers.length > 0">
+
+    <div class="table-header">
+      <span>Customer</span>
+      <span>Orders</span>
+      <span>Total Spent</span>
+      <span>Last Purchase</span>
+      <span>Type</span>
+    </div>
+
+    <div class="table-row" *ngFor="let customer of customers">
+
+      <div class="customer-info">
+        <div class="avatar">
+          {{ customer.customerName?.charAt(0) || 'C' }}
+        </div>
+
+        <div>
+          <strong>{{ customer.customerName }}</strong>
+          <p>{{ customer.email || 'Email not available' }}</p>
+        </div>
+      </div>
+
+      <span>{{ customer.totalOrders }}</span>
+
+      <span class="amount">
+        ₹{{ customer.totalSpent | number:'1.0-0' }}
+      </span>
+
+      <span>{{ customer.lastOrderDate | date:'mediumDate' }}</span>
+
+      <span class="customer-type" [ngClass]="getCustomerTypeClass(customer.customerType)">
+        {{ customer.customerType }}
+      </span>
+
+    </div>
+
+  </div>
+
+</section>
