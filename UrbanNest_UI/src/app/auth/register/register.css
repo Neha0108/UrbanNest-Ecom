@@ -1,0 +1,336 @@
+/* ============================
+   PAGE BACKGROUND
+============================ */
+
+.page-shell.auth-hero {
+  min-height: 100vh;
+  padding: 40px 20px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background:
+    radial-gradient(circle at top,
+      rgba(212, 175, 55, 0.12),
+      transparent 35%),
+    linear-gradient(
+      180deg,
+      #0b0d12 0%,
+      #11151c 100%
+    );
+}
+
+/* ============================
+   CARD
+============================ */
+
+.auth-card {
+  width: 100%;
+  max-width: 550px;
+
+  padding: 36px;
+
+  border-radius: 24px;
+
+  background: rgba(18, 22, 30, 0.96);
+
+  border: 1px solid rgba(212, 175, 55, 0.2);
+
+  backdrop-filter: blur(14px);
+
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.45),
+    0 0 20px rgba(212, 175, 55, 0.08);
+}
+
+/* ============================
+   HEADER
+============================ */
+
+.section-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-size: 0.75rem;
+  color: #d4af37;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.section-title {
+  color: #ffffff;
+  font-size: 2.3rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.body-copy {
+  color: #b7bbc3;
+  line-height: 1.7;
+  font-size: 0.95rem;
+}
+
+/* ============================
+   HEADINGS
+============================ */
+
+h5 {
+  color: #d4af37;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+/* ============================
+   LABELS
+============================ */
+
+.form-label {
+  color: #f1f1f1;
+  font-weight: 500;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.text-danger {
+  color: #ff6b6b !important;
+}
+
+/* ============================
+   INPUTS
+============================ */
+
+.form-control,
+.form-select {
+
+  width: 100%;
+
+  background: #181d26;
+
+  color: #ffffff;
+
+  border: 1px solid rgba(255,255,255,0.08);
+
+  border-radius: 12px;
+
+  padding: 12px 14px;
+
+  transition: all .3s ease;
+}
+
+.form-control::placeholder {
+  color: #7e8794;
+}
+
+.form-control:focus,
+.form-select:focus {
+  background: #1d232e;
+  border-color: #d4af37;
+  box-shadow:
+    0 0 0 3px rgba(212, 175, 55, 0.12);
+  outline: none;
+}
+
+.form-select option {
+  background: #181d26;
+  color: #fff;
+}
+
+/* ============================
+   INVALID
+============================ */
+
+.is-invalid {
+  border-color: #ff6b6b !important;
+}
+
+small.text-danger {
+  display: block;
+  margin-top: 6px;
+  font-size: .82rem;
+}
+
+/* ============================
+   BUTTONS
+============================ */
+
+.btn {
+  border: none;
+  border-radius: 999px;
+  padding: 12px 20px;
+  transition: .3s ease;
+  font-weight: 600;
+}
+
+.btn-primary {
+  background: #d4af37;
+  color: #111;
+}
+
+.btn-primary:hover {
+  background: #e3be49;
+  transform: translateY(-1px);
+}
+
+.btn-success {
+  background: #28a745;
+  color: white;
+}
+
+.btn-success:hover {
+  background: #31bf55;
+}
+
+.btn-secondary {
+  background: #2c3440;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: #384252;
+}
+
+.btn-link {
+  text-decoration: none;
+  color: #d4af37;
+}
+
+.btn-link:hover {
+  color: #f1ce64;
+}
+
+.btn:disabled {
+  opacity: .6;
+  cursor: not-allowed;
+}
+
+/* ============================
+   OTP
+============================ */
+
+.otp-container {
+  gap: 10px;
+}
+
+.otp-box {
+  width: 52px;
+  height: 56px;
+
+  text-align: center;
+
+  border-radius: 12px;
+
+  border: 1px solid rgba(212,175,55,0.25);
+
+  background: #181d26;
+
+  color: white;
+
+  font-size: 1.2rem;
+  font-weight: 700;
+
+  outline: none;
+
+  transition: .3s ease;
+}
+
+.otp-box:focus {
+  border-color: #d4af37;
+  box-shadow:
+    0 0 0 3px rgba(212,175,55,.15);
+}
+
+/* ============================
+   ALERTS
+============================ */
+
+.alert {
+  border-radius: 12px;
+  margin-bottom: 20px;
+  border: none;
+}
+
+.alert-success {
+  background: rgba(40,167,69,.15);
+  color: #7df4a2;
+}
+
+.alert-danger {
+  background: rgba(255,107,107,.12);
+  color: #ff8c8c;
+}
+
+/* ============================
+   HELP TEXT
+============================ */
+
+.text-muted {
+  color: #9da4af !important;
+  font-size: .8rem;
+}
+
+/* ============================
+   FOOTER NOTE
+============================ */
+
+.small-note {
+  margin-top: 24px;
+  text-align: center;
+  color: #b7bbc3;
+  font-size: .92rem;
+}
+
+.small-note a {
+  color: #d4af37;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.small-note a:hover {
+  color: #f1cf63;
+}
+
+/* ============================
+   ANIMATION
+============================ */
+
+.animated-entry {
+  animation: cardEnter .55s ease;
+}
+
+@keyframes cardEnter {
+
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================
+   MOBILE
+============================ */
+
+@media (max-width: 576px) {
+
+  .auth-card {
+    padding: 24px;
+  }
+
+  .section-title {
+    font-size: 1.9rem;
+  }
+
+  .otp-box {
+    width: 42px;
+    height: 48px;
+  }
+}

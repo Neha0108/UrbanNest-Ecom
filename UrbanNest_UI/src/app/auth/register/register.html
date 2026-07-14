@@ -1,0 +1,234 @@
+<div class="page-shell auth-hero">
+  <div class="auth-card register-card glass-card animated-entry">
+
+    <header class="section-header">
+      <p class="eyebrow">Create account</p>
+      <h1 class="section-title">Join Urban Nest</h1>
+      <p class="body-copy">
+        Start shopping with premium, curated fashion and lifestyle essentials.
+      </p>
+    </header>
+
+    <!--  GLOBAL ERROR/SUCCESS MESSAGE -->
+    <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
+      {{ errorMessage }}
+    </div>
+    <div *ngIf="successMessage" class="alert alert-success alert-dismissible fade show" role="alert">
+      {{ successMessage }}
+    </div>
+
+    <!--  STEP 1 -->
+    <form *ngIf="step === 1" [formGroup]="userform">
+
+      <!-- Full Name -->
+      <div class="mb-3 text-start">
+        <label class="form-label">Full Name <span class="text-danger">*</span></label>
+        <input type="text" class="form-control"
+          [class.is-invalid]="userform.get('UserName')?.touched && userform.get('UserName')?.invalid"
+          formControlName="UserName" placeholder="Enter your full name" />
+        <small class="text-danger" *ngIf="userform.get('UserName')?.touched && userform.get('UserName')?.invalid">
+          <span *ngIf="userform.get('UserName')?.errors?.['required']">Full name is required</span>
+          <span *ngIf="userform.get('UserName')?.errors?.['invalidName']">Name should contain only letters and
+            spaces</span>
+        </small>
+      </div>
+
+      <!-- Email -->
+      <div class="mb-3 text-start">
+        <label class="form-label">Email <span class="text-danger">*</span></label>
+        <input type="email" class="form-control"
+          [class.is-invalid]="userform.get('UserEmail')?.touched && userform.get('UserEmail')?.invalid"
+          formControlName="UserEmail" placeholder="Enter your email" />
+        <small class="text-danger" *ngIf="userform.get('UserEmail')?.touched && userform.get('UserEmail')?.invalid">
+          <span *ngIf="userform.get('UserEmail')?.errors?.['required']">Email is required</span>
+          <span *ngIf="userform.get('UserEmail')?.errors?.['email']">Please enter a valid email address</span>
+        </small>
+      </div>
+
+      <!-- Password -->
+      <div class="mb-3 text-start">
+        <label class="form-label">Password <span class="text-danger">*</span></label>
+        <input type="password" class="form-control"
+          [class.is-invalid]="userform.get('UserPassword')?.touched && userform.get('UserPassword')?.invalid"
+          formControlName="UserPassword" placeholder="Enter your password (min 8 characters)" />
+        <small class="text-danger"
+          *ngIf="userform.get('UserPassword')?.touched && userform.get('UserPassword')?.invalid">
+          <span *ngIf="userform.get('UserPassword')?.errors?.['required']">Password is required</span>
+          <span *ngIf="userform.get('UserPassword')?.errors?.['minlength']">Password must be at least 8
+            characters</span>
+          <span *ngIf="userform.get('UserPassword')?.errors?.['weakPassword']">Password must contain uppercase,
+            lowercase, and digits</span>
+        </small>
+      </div>
+      <div class="mb-3 text-start">
+        <label class="form-label">Confirm Password <span class="text-danger">*</span></label>
+
+        <input type="password" class="form-control" formControlName="ConfirmPassword"
+          placeholder="Re-enter your password"
+          [class.is-invalid]="userform.errors?.['mismatch'] && userform.get('ConfirmPassword')?.touched" />
+
+        <small class="text-danger" *ngIf="userform.errors?.['mismatch'] && userform.get('ConfirmPassword')?.touched">
+          Passwords do not match
+        </small>
+      </div>
+
+      <!-- Role -->
+      <div class="mb-4 text-start">
+        <label class="form-label">Select Role <span class="text-danger">*</span></label>
+        <select class="form-select"
+          [class.is-invalid]="userform.get('Roles')?.touched && userform.get('Roles')?.invalid" formControlName="Roles">
+          <option value="">-- Select Role --</option>
+          <option *ngFor="let role of roles" [value]="role.name">
+            {{ role.name }}
+          </option>
+        </select>
+        <small class="text-danger" *ngIf="userform.get('Roles')?.touched && userform.get('Roles')?.invalid">
+          Please select a role
+        </small>
+      </div>
+
+      <!--  OTP MESSAGES -->
+      <div *ngIf="otpError" class="alert alert-danger alert-dismissible fade show" role="alert">
+        {{ otpError }}
+      </div>
+      <div *ngIf="otpSuccess" class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ otpSuccess }}
+      </div>
+
+      <!--  SEND OTP (for BOTH roles) -->
+      <button *ngIf="!otpSent" type="button" class="btn btn-primary w-100" (click)="sendOtp()"
+        [disabled]="userform.get('UserEmail')?.invalid">
+        Send OTP
+      </button>
+
+      <!--  OTP SECTION -->
+      <div *ngIf="otpSent" class="mt-4 text-start">
+
+        <label class="form-label">Enter OTP (6 digits) <span class="text-danger">*</span></label>
+
+        <div class="otp-container d-flex justify-content-between mb-3">
+          <input *ngFor="let box of [0,1,2,3,4,5]; let i = index" type="text" maxlength="1" class="otp-box"
+            [(ngModel)]="otpArray[i]" [ngModelOptions]="{ standalone: true }" (input)="moveNext($event, i)"
+            placeholder="0" />
+        </div>
+
+        <!-- VERIFY -->
+        <button type="button" class="btn btn-success w-100 mb-2" (click)="verifyOtp()" [disabled]="otpVerified">
+          {{ otpVerified ? 'Verified ✅' : 'Verify OTP' }}
+        </button>
+
+        <!-- RESEND -->
+        <button type="button" class="btn btn-link w-100" (click)="resendOtp()" [disabled]="resendDisabled">
+          Resend OTP {{ countdown > 0 ? '(' + countdown + 's)' : '' }}
+        </button>
+
+      </div>
+
+      <!--  CONSUMER REGISTER -->
+      <button *ngIf="otpVerified && !isRetailer" type="button" class="btn btn-success w-100 mt-3" (click)="submit()">
+        Create Account
+      </button>
+
+      <!--  RETAILER NEXT (only after OTP verified) -->
+      <button *ngIf="otpVerified && isRetailer" type="button" class="btn btn-primary w-100 mt-3"
+        (click)="goToRetailerForm()">
+        Next →
+      </button>
+
+    </form>
+
+    <!--  STEP 2: RETAILER -->
+    <form *ngIf="step === 2" [formGroup]="retailerForm" (ngSubmit)="submit()">
+
+      <h5 class="mb-3">Retailer Information</h5>
+
+      <!-- Shop Name -->
+      <div class="mb-3 text-start">
+        <label class="form-label">Shop Name <span class="text-danger">*</span></label>
+        <input type="text" class="form-control"
+          [class.is-invalid]="retailerForm.get('shopName')?.touched && retailerForm.get('shopName')?.invalid"
+          formControlName="shopName" placeholder="Enter shop name" />
+        <small class="text-danger"
+          *ngIf="retailerForm.get('shopName')?.touched && retailerForm.get('shopName')?.invalid">
+          <span *ngIf="retailerForm.get('shopName')?.errors?.['required']">Shop name is required</span>
+          <span *ngIf="retailerForm.get('shopName')?.errors?.['minlength']">Shop name must be at least 3
+            characters</span>
+        </small>
+      </div>
+
+      <!-- GST Number -->
+      <div class="mb-3 text-start">
+        <label class="form-label">GST Number <span class="text-danger">*</span></label>
+        <input type="text" class="form-control"
+          [class.is-invalid]="retailerForm.get('gstNumber')?.touched && retailerForm.get('gstNumber')?.invalid"
+          formControlName="gstNumber" placeholder="e.g., 27AAPZU9603R1Z5"
+          (blur)="retailerForm.get('gstNumber')?.markAsTouched()" />
+        <small class="text-danger"
+          *ngIf="retailerForm.get('gstNumber')?.touched && retailerForm.get('gstNumber')?.invalid">
+          <span *ngIf="retailerForm.get('gstNumber')?.errors?.['required']">GST number is required</span>
+          <span *ngIf="retailerForm.get('gstNumber')?.errors?.['invalidGst']">Invalid GST number format (15 characters
+            required)</span>
+        </small>
+        <small class="text-muted">Format: 27AAPZU9603R1Z5</small>
+      </div>
+
+      <!-- PAN Number -->
+      <div class="mb-3 text-start">
+        <label class="form-label">PAN Number <span class="text-danger">*</span></label>
+        <input type="text" class="form-control"
+          [class.is-invalid]="retailerForm.get('panNumber')?.touched && retailerForm.get('panNumber')?.invalid"
+          formControlName="panNumber" placeholder="e.g., AAAAA9999A"
+          (blur)="retailerForm.get('panNumber')?.markAsTouched()" />
+        <small class="text-danger"
+          *ngIf="retailerForm.get('panNumber')?.touched && retailerForm.get('panNumber')?.invalid">
+          <span *ngIf="retailerForm.get('panNumber')?.errors?.['required']">PAN number is required</span>
+          <span *ngIf="retailerForm.get('panNumber')?.errors?.['invalidPan']">Invalid PAN format (5 letters, 4 digits, 1
+            letter required)</span>
+        </small>
+        <small class="text-muted">Format: AAAAA9999A</small>
+      </div>
+
+      <!-- Contact Number -->
+      <div class="mb-3 text-start">
+        <label class="form-label">Contact Number <span class="text-danger">*</span></label>
+        <input type="text" class="form-control"
+          [class.is-invalid]="retailerForm.get('contactNumber')?.touched && retailerForm.get('contactNumber')?.invalid"
+          formControlName="contactNumber" placeholder="Enter 10-digit phone number"
+          (blur)="retailerForm.get('contactNumber')?.markAsTouched()" />
+        <small class="text-danger"
+          *ngIf="retailerForm.get('contactNumber')?.touched && retailerForm.get('contactNumber')?.invalid">
+          <span *ngIf="retailerForm.get('contactNumber')?.errors?.['required']">Contact number is required</span>
+          <span *ngIf="retailerForm.get('contactNumber')?.errors?.['invalidContact']">Please enter a valid 10-digit
+            Indian mobile number</span>
+        </small>
+        <small class="text-muted">Must start with 6-9 and be 10 digits</small>
+      </div>
+
+      <!-- Address -->
+      <div class="mb-3 text-start">
+        <label class="form-label">Address <span class="text-danger">*</span></label>
+        <input type="text" class="form-control"
+          [class.is-invalid]="retailerForm.get('address')?.touched && retailerForm.get('address')?.invalid"
+          formControlName="address" placeholder="Enter complete address"
+          (blur)="retailerForm.get('address')?.markAsTouched()" />
+        <small class="text-danger" *ngIf="retailerForm.get('address')?.touched && retailerForm.get('address')?.invalid">
+          <span *ngIf="retailerForm.get('address')?.errors?.['required']">Address is required</span>
+          <span *ngIf="retailerForm.get('address')?.errors?.['minlength']">Address must be at least 5 characters</span>
+        </small>
+      </div>
+
+      <button type="submit" class="btn btn-success w-100" [disabled]="retailerForm.invalid">
+        Register Retailer
+      </button>
+
+      <button type="button" class="btn btn-secondary w-100 mt-2" (click)="step = 1">
+        Back ←
+      </button>
+    </form>
+
+    <p class="small-note" *ngIf="step === 1">
+      Already have an account? <a routerLink="/login">Click here to login</a>
+    </p>
+
+  </div>
+</div>
