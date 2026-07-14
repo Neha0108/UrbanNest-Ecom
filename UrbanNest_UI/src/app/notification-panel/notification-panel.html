@@ -1,0 +1,78 @@
+<!-- src/app/components/shared/notification-panel/notification-panel.html -->
+
+<div class="notif-wrapper">
+
+  <!-- Bell Button -->
+  <button class="notif-bell" (click)="togglePanel()" [class.active]="isOpen()" aria-label="Notifications">
+    <span class="material-icons">notifications</span>
+    @if (unreadCount() > 0) {
+      <span class="notif-badge">{{ unreadCount() > 99 ? '99+' : unreadCount() }}</span>
+    }
+  </button>
+
+  <!-- Backdrop -->
+  @if (isOpen()) {
+    <div class="notif-backdrop" (click)="closePanel()"></div>
+  }
+
+  <!-- Dropdown Panel -->
+  @if (isOpen()) {
+    <div class="notif-panel" role="dialog" aria-label="Notification panel">
+
+      <!-- Header -->
+      <div class="notif-header">
+        <span class="notif-header-title">Notifications</span>
+        @if (unreadCount() > 0) {
+          <button class="mark-all-btn" (click)="markAllRead()">Mark all as read</button>
+        }
+      </div>
+
+      <!-- Body -->
+      <div class="notif-body">
+
+        @if (isLoading()) {
+          <div class="notif-loading">
+            <div class="notif-spinner"></div>
+            <span>Loading…</span>
+          </div>
+        } @else if (notifications().length === 0) {
+          <div class="notif-empty">
+            <span class="material-icons">notifications_none</span>
+            <p>You're all caught up!</p>
+            <small>No notifications yet.</small>
+          </div>
+        } @else {
+          <ul class="notif-list">
+            @for (notif of notifications(); track notif.id) {
+              <li
+                class="notif-item"
+                [class.unread]="!notif.isRead"
+                (click)="onNotificationClick(notif)"
+                (keydown.enter)="onNotificationClick(notif)"
+                tabindex="0"
+                role="button"
+              >
+                <div class="notif-icon-wrap" [ngClass]="notifService.getColorClass(notif.type)">
+                  <span class="material-icons notif-type-icon">
+                    {{ notifService.getIcon(notif.type) }}
+                  </span>
+                </div>
+                <div class="notif-content">
+                  <p class="notif-title">{{ notif.title }}</p>
+                  <p class="notif-message">{{ notif.message }}</p>
+                  <span class="notif-time">{{ notifService.getRelativeTime(notif.createdAt) }}</span>
+                </div>
+                @if (!notif.isRead) {
+                  <span class="unread-dot" aria-label="Unread"></span>
+                }
+              </li>
+            }
+          </ul>
+        }
+
+      </div>
+
+    </div>
+  }
+
+</div>
