@@ -64,17 +64,24 @@ The project follows a layered architecture with Controllers, Services, Repositor
 ## Project Structure
 
 ```text
-JsonWebToken
-├── Controllers
-├── DTO
-├── Model
-├── Repository
-├── Service
-├── DataAccess
-├── Migrations
-├── wwwroot
-├── Program.cs
-└── appsettings.json
+UrbanNest-Ecom/
+│
+├── Database/
+│   ├── UrbanNestDB.sql
+│   └── SeedData.sql
+│
+├── README.md
+└── UrbanNest/JsonWebToken
+    ├── Controllers
+    ├── DTO
+    ├── Model
+    ├── Repository
+    ├── Service
+    ├── DataAccess
+    ├── Migrations
+    ├── wwwroot
+    ├── Program.cs
+    └── appsettings.json
 ```
 
 ## Setup Instructions
