@@ -1,0 +1,94 @@
+<!-- Floating toggle button — always visible -->
+<button
+  type="button"
+  class="chat-fab"
+  (click)="toggleOpen()"
+  [attr.aria-label]="isOpen ? 'Close chat' : 'Open chat'"
+>
+  <span *ngIf="!isOpen">💬</span>
+  <span *ngIf="isOpen">&times;</span>
+</button>
+
+<!-- Panel — only rendered/visible when open -->
+<div class="chat-panel" *ngIf="isOpen">
+  <div class="chat-header">
+    <div class="chat-header-title">
+      <span class="chat-dot"></span>
+      Urban Nest Assistant
+    </div>
+    <button class="chat-close-btn" (click)="onClose()" aria-label="Close chat">
+      &times;
+    </button>
+  </div>
+
+  <div class="chat-body">
+    <div
+      *ngFor="let msg of messages; trackBy: trackByIndex"
+      class="chat-row"
+      [class.chat-row-user]="msg.sender === 'user'"
+    >
+      <div class="chat-bubble" [class.chat-bubble-user]="msg.sender === 'user'">
+        <p class="chat-text">{{ msg.text }}</p>
+
+        <div class="chat-products" *ngIf="msg.products && msg.products.length">
+          <button
+            type="button"
+            class="chat-product-card"
+            *ngFor="let product of msg.products"
+            (click)="goToProduct(product)"
+          >
+
+            <img class = "chat-product-image" [src]="'http://localhost:5146' + product.imagePath[0]" alt="{{ product.productName }}" />
+
+            <div class="chat-product-info">
+              <span class="chat-product-name">{{ product.productName }}</span>
+              <span class="chat-product-meta">{{ product.categoryName }}</span>
+              <span class="chat-product-price">₹{{ product.productPrice }}</span>
+            </div>
+          </button>
+        </div>
+
+        <div class="chat-quick-replies" *ngIf="msg.sender === 'bot' && msg.quickReplies?.length">
+          <button
+            type="button"
+            class="chat-quick-chip"
+            *ngFor="let qr of msg.quickReplies"
+            (click)="onQuickReply(qr)"
+          >
+            {{ qr }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="chat-row" *ngIf="loading">
+      <div class="chat-bubble chat-bubble-loading">
+        <span class="chat-typing-dot"></span>
+        <span class="chat-typing-dot"></span>
+        <span class="chat-typing-dot"></span>
+      </div>
+    </div>
+
+    <div #scrollAnchor></div>
+  </div>
+
+  <div class="chat-input-row">
+    <input
+      type="text"
+      class="chat-input"
+      placeholder="Ask about products, cart, orders..."
+      [(ngModel)]="draft"
+      (keydown.enter)="send()"
+      [disabled]="loading"
+    />
+    <button
+      type="button"
+      class="chat-send-btn"
+      (click)="send()"
+      [disabled]="loading || !draft.trim()"
+      aria-label="Send message"
+    >
+      ➤
+    </button>
+  </div>
+</div>
